@@ -45,7 +45,7 @@ class BashRunner(DefaultClusterSetup):
             commands = fp.readlines()
 
         for command in commands:
-            log.info("$ " + command)
+            log.info("$ %s" % command.strip())
         cmd = "\n".join(commands)
         for node in nodes:
             self.pool.simple_job(node.ssh.execute, (cmd,), jobid=node.alias)
