@@ -23,12 +23,16 @@ import os
 import sys
 import time
 
+import six
+
 from starcluster import node
 from starcluster import utils
 from starcluster import cluster
 from starcluster import completion
 from starcluster.logger import log
 
+if six.PY3:
+    basestring = str
 
 class CmdBase(completion.CmdComplete):
     """

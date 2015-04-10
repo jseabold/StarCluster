@@ -56,7 +56,7 @@ class CmdStart(ClusterCompleter):
     def addopts(self, parser):
         templates = []
         if self.cfg:
-            templates = self.cfg.clusters.keys()
+            templates = list(self.cfg.clusters.keys())
         parser.add_option("-x", "--no-create", dest="no_create",
                           action="store_true", default=False,
                           help="do not launch new EC2 instances when "
@@ -132,7 +132,7 @@ class CmdStart(ClusterCompleter):
                           "(defaults to sgeadmin)")
         opt = parser.add_option("-S", "--cluster-shell", dest="cluster_shell",
                                 action="store",
-                                choices=static.AVAILABLE_SHELLS.keys(),
+                                choices=list(static.AVAILABLE_SHELLS.keys()),
                                 default=None,
                                 help="shell for cluster user "
                                 "(defaults to bash)")

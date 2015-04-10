@@ -22,6 +22,7 @@ from __future__ import unicode_literals
 import os
 import urllib
 
+import six
 from six.moves import cStringIO as StringIO
 from six.moves import configparser as ConfigParser
 
@@ -32,9 +33,12 @@ from starcluster import awsutils
 from starcluster import deathrow
 from starcluster import exception
 from starcluster.cluster import Cluster
+from starcluster.logger import log
 from starcluster.utils import AttributeDict
 
-from starcluster.logger import log
+
+if six.PY3:
+    basestring = str
 
 DEBUG_CONFIG = False
 

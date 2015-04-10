@@ -528,7 +528,7 @@ class Cluster(object):
         etc. for all volumes that do not include a device/partition setting
         """
         #devices = ['/dev/sd%s' % s for s in string.lowercase]
-        devices = ['/dev/xvdb%s' % s for s in string.lowercase]
+        devices = ['/dev/xvdb%s' % s for s in string.ascii_lowercase]
         devmap = {}
         for volname in vols:
             vol = vols.get(volname)

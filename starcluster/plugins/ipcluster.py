@@ -29,14 +29,19 @@ import os
 import time
 import posixpath
 
+import six
+
 from starcluster import utils
 from starcluster import static
 from starcluster import spinner
 from starcluster import exception
-from starcluster.utils import print_timing
 from starcluster.clustersetup import DefaultClusterSetup
-
 from starcluster.logger import log
+from starcluster.utils import print_timing
+
+
+if six.PY3:
+    basestring = str
 
 IPCLUSTER_CACHE = os.path.join(static.STARCLUSTER_CFG_DIR, 'ipcluster')
 CHANNEL_NAMES = (

@@ -1277,7 +1277,7 @@ class EasyEC2(EasyAWS):
             bmap[root_device_name] = sda1
         if add_ephemeral_drives:
             if not instance_store:
-                drives = ['/dev/xvd%s%%s' % s for s in string.lowercase]
+                drives = ['/dev/xvd%s%%s' % s for s in string.ascii_lowercase]
                 for i in range(num_ephemeral_drives):
                     j, k = i % 26, i / 26
                     device_fmt = drives[k]
@@ -1286,7 +1286,7 @@ class EasyEC2(EasyAWS):
                     bmap[device_fmt % chr(ord('a') + j)] = eph
             else:
                 drives = ['sd%s%d' % (s, i) for i in range(1, 10)
-                          for s in string.lowercase[1:]]
+                          for s in string.ascii_lowercase[1:]]
                 for i in range(num_ephemeral_drives):
                     eph = boto.ec2.blockdevicemapping.BlockDeviceType()
                     eph.ephemeral_name = 'ephemeral%d' % i

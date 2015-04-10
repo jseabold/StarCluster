@@ -124,7 +124,7 @@ class VolumeCreator(cluster.Cluster):
 
     def _determine_device(self):
         block_dev_map = self._instance.block_device_mapping
-        for char in string.lowercase[::-1]:
+        for char in string.ascii_lowercase[::-1]:
             dev = '/dev/sd%s' % char
             if not block_dev_map.get(dev):
                 self._aws_block_device = dev
