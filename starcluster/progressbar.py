@@ -66,6 +66,7 @@ except ImportError:
     pass
 import signal
 
+from six.moves import range
 
 class ProgressBarWidget(object):
     """This is an element of ProgressBar formatting.
@@ -252,7 +253,7 @@ class ProgressBarBase(object):
 
         It returns self so you can use it like this:
         >>> pbar = ProgressBar().start()
-        >>> for i in xrange(100):
+        >>> for i in range(100):
         ...    # do something
         ...    pbar.update(i+1)
         ...
@@ -274,7 +275,7 @@ class ProgressBar(ProgressBarBase):
 
     The simple use is like this:
     >>> pbar = ProgressBar().start()
-    >>> for i in xrange(100):
+    >>> for i in range(100):
     ...    # do something
     ...    pbar.update(i+1)
     ...
