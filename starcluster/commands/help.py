@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 
 import optparse
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdHelp(CmdBase):

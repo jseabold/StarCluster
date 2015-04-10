@@ -19,7 +19,7 @@ from starcluster import node
 from starcluster import volume
 from starcluster import static
 
-from createvolume import CmdCreateVolume
+from starcluster.commands.createvolume import CmdCreateVolume
 
 
 class CmdResizeVolume(CmdCreateVolume):

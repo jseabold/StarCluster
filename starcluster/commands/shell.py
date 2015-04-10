@@ -29,7 +29,7 @@ from starcluster import utils
 from starcluster import static
 from starcluster.logger import log
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdShell(CmdBase):

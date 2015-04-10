@@ -17,7 +17,7 @@
 
 from starcluster.logger import log
 
-from completers import S3ImageCompleter
+from starcluster.commands.completers import S3ImageCompleter
 
 
 class CmdDownloadImage(S3ImageCompleter):

@@ -16,7 +16,8 @@
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from completers import InstanceCompleter
+
+from starcluster.commands.completers import InstanceCompleter
 
 
 class CmdSshInstance(InstanceCompleter):

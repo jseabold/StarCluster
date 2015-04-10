@@ -17,7 +17,7 @@
 
 from starcluster.logger import log
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdRemoveKey(CmdBase):

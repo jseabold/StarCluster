@@ -16,7 +16,7 @@
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
 
 from starcluster import static
-from completers import ClusterCompleter
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdAddNode(ClusterCompleter):

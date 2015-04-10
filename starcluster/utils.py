@@ -36,6 +36,7 @@ import inspect
 import calendar
 from datetime import datetime
 
+import six
 from six.moves import cStringIO as StringIO
 from six.moves import cPickle
 
@@ -90,6 +91,13 @@ class AttributeDict(dict):
             return super(AttributeDict, self).__getattribute__(name)
 
 
+def get_func_name(func):
+    if six.PY2:
+        func.func_name
+    elif six.PY3:
+        return func.__name__
+
+
 def print_timing(msg=None, debug=False):
     """
     Decorator for printing execution time (in mins) of a function
@@ -113,7 +121,7 @@ def print_timing(msg=None, debug=False):
     """
     prefix = msg
     if isinstance(msg, types.FunctionType):
-        prefix = msg.func_name
+        prefix = get_func_name(msg)
 
     def wrap_f(func, *arg, **kargs):
         """Raw timing function """

@@ -22,7 +22,7 @@ from __future__ import unicode_literals
 from starcluster import exception
 from starcluster.logger import log
 
-from completers import ClusterCompleter
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdTerminate(ClusterCompleter):

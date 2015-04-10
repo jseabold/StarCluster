@@ -20,7 +20,7 @@ from datetime import timedelta
 from starcluster import utils
 from starcluster import static
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdSpotHistory(CmdBase):

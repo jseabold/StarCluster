@@ -17,7 +17,7 @@
 
 from starcluster.logger import log
 
-from completers import ImageCompleter
+from starcluster.commands.completers import ImageCompleter
 
 
 class CmdRemoveImage(ImageCompleter):

@@ -18,7 +18,7 @@
 import glob
 
 from starcluster import exception
-from completers import ClusterCompleter
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdGet(ClusterCompleter):

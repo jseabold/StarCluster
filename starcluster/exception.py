@@ -24,6 +24,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os
+from builtins import input
 
 from starcluster import static
 from starcluster.logger import log
@@ -288,7 +289,7 @@ class ConfigNotFound(ConfigError):
         print('[1] Show the StarCluster config template')
         print('[2] Write config template to %s' % self.cfg)
         print('[q] Quit')
-        resp = raw_input('\nPlease enter your selection: ')
+        resp = input('\nPlease enter your selection: ')
         if resp == '1':
             print(self.template)
         elif resp == '2':

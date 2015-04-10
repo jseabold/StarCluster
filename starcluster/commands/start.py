@@ -27,7 +27,7 @@ from starcluster import completion
 from starcluster.templates import user_msgs
 from starcluster.logger import log
 
-from completers import ClusterCompleter
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdStart(ClusterCompleter):

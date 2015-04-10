@@ -16,7 +16,8 @@
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from completers import ClusterCompleter
+
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdSshMaster(ClusterCompleter):

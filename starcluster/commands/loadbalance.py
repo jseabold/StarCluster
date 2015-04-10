@@ -18,7 +18,7 @@
 from starcluster import exception
 from starcluster.balancers import sge
 
-from completers import ClusterCompleter
+from starcluster.commands.completers import ClusterCompleter
 
 
 class CmdLoadBalance(ClusterCompleter):

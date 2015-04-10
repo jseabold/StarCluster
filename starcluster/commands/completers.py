@@ -22,7 +22,7 @@ from __future__ import unicode_literals
 from starcluster import completion
 from starcluster.logger import log
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class Completer(CmdBase):

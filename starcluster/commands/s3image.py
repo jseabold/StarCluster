@@ -22,7 +22,7 @@ import warnings
 from starcluster import exception
 from starcluster.logger import log
 
-from completers import InstanceCompleter
+from starcluster.commands.completers import InstanceCompleter
 
 
 class CmdS3Image(InstanceCompleter):

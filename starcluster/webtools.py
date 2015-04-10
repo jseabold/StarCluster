@@ -27,7 +27,8 @@ import mimetypes
 import posixpath
 import webbrowser
 import subprocess
-import BaseHTTPServer as httpserv
+
+from six.moves import BaseHTTPServer as httpserv
 
 from starcluster import templates
 from starcluster import exception

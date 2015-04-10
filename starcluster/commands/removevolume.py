@@ -17,7 +17,7 @@
 
 from starcluster.logger import log
 
-from completers import VolumeCompleter
+from starcluster.commands.completers import VolumeCompleter
 
 
 class CmdRemoveVolume(VolumeCompleter):

@@ -22,7 +22,7 @@ from starcluster import volume
 from starcluster import static
 from starcluster import exception
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdCreateVolume(CmdBase):

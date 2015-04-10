@@ -17,7 +17,7 @@
 
 from starcluster import static
 
-from base import CmdBase
+from starcluster.commands.base import CmdBase
 
 
 class CmdListVolumes(CmdBase):
