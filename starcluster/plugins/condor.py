@@ -49,7 +49,7 @@ class CondorPlugin(clustersetup.DefaultClusterSetup):
             # TODO: below should work but doesn't for some reason...
             # master.ssh.mkdir(FS_REMOTE_DIR, mode=01777)
             master.ssh.mkdir(FS_REMOTE_DIR)
-            master.ssh.chmod(01777, FS_REMOTE_DIR)
+            master.ssh.chmod(0o1777, FS_REMOTE_DIR)
         nodes = nodes or self.nodes
         log.info("Starting Condor master")
         self._add_condor_node(master)

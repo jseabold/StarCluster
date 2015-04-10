@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
@@ -123,20 +127,20 @@ class SSHClient(object):
             transport.connect(username=username, pkey=pkey, password=password)
         except paramiko.AuthenticationException:
             raise exception.SSHAuthException(username, host)
-        except paramiko.SSHException, e:
+        except paramiko.SSHException as e:
             msg = e.args[0]
             raise exception.SSHError(msg)
         except socket.error:
             raise exception.SSHConnectionError(host, port)
         except EOFError:
             raise exception.SSHConnectionError(host, port)
-        except Exception, e:
+        except Exception as e:
             raise exception.SSHError(str(e))
         self.close()
         self._transport = transport
         try:
             assert self.sftp is not None
-        except paramiko.SFTPError, e:
+        except paramiko.SFTPError as e:
             if 'Garbage packet received' in e:
                 log.debug("Garbage packet received", exc_info=True)
                 raise exception.SSHAccessDeniedViaAuthKeys(username)
@@ -235,7 +239,7 @@ class SSHClient(object):
         rfile.close()
         return key
 
-    def makedirs(self, path, mode=0755):
+    def makedirs(self, path, mode=0o755):
         """
         Same as os.makedirs - makes a new directory and automatically creates
         all parent directories if they do not exist.
@@ -248,7 +252,7 @@ class SSHClient(object):
         if head and tail and not self.path_exists(head):
             try:
                 self.makedirs(head, mode)
-            except OSError, e:
+            except OSError as e:
                 # be happy if someone already created the path
                 if e.errno != os.errno.EEXIST:
                     raise
@@ -257,7 +261,7 @@ class SSHClient(object):
                 return
         self.mkdir(path, mode)
 
-    def mkdir(self, path, mode=0755, ignore_failure=False):
+    def mkdir(self, path, mode=0o755, ignore_failure=False):
         """
         Make a new directory on the remote machine
 
@@ -451,7 +455,7 @@ class SSHClient(object):
         try:
             self.scp.get(remotepaths, local_path=localpath,
                          recursive=recursive)
-        except Exception, e:
+        except Exception as e:
             log.debug("get failed: remotepaths=%s, localpath=%s",
                       str(remotepaths), localpath)
             raise exception.SCPException(str(e))
@@ -469,7 +473,7 @@ class SSHClient(object):
         try:
             self.scp.put(localpaths, remote_path=remotepath,
                          recursive=recursive)
-        except Exception, e:
+        except Exception as e:
             log.debug("put failed: localpaths=%s, remotepath=%s",
                       str(localpaths), remotepath)
             raise exception.SCPException(str(e))
@@ -517,10 +521,10 @@ class SSHClient(object):
                     line = ''.join(c for c in line if c in string.printable)
                 if line != '':
                     output.append(line)
-                    print line,
+                    print(line, end="")
             for line in stderr.readlines():
                 output.append(line)
-                print line,
+                print(line, end="")
         if only_printable:
             output = map(lambda line: ''.join(c for c in line if c in
                                               string.printable), output)
@@ -681,7 +685,7 @@ class SSHClient(object):
                     try:
                         x = chan.recv(1024)
                         if len(x) == 0:
-                            print '\r\n*** EOF\r\n',
+                            print('\r\n*** EOF\r\n', end="")
                             break
                         sys.stdout.write(x)
                         sys.stdout.flush()
@@ -891,8 +895,8 @@ def test_create_keypair_fingerprint(keypair=None):
     key_location = cfg.get_key(keypair).key_location
     localfprint = get_private_rsa_fingerprint(key_location)
     ec2fprint = ec2.get_keypair(keypair).fingerprint
-    print 'local fingerprint: %s' % localfprint
-    print '  ec2 fingerprint: %s' % ec2fprint
+    print('local fingerprint: %s' % localfprint)
+    print('  ec2 fingerprint: %s' % ec2fprint)
     assert localfprint == ec2fprint
 
 
@@ -906,6 +910,6 @@ def test_import_keypair_fingerprint(keypair):
     key_location = cfg.get_key(keypair).key_location
     localfprint = get_public_rsa_fingerprint(key_location)
     ec2fprint = ec2.get_keypair(keypair).fingerprint
-    print 'local fingerprint: %s' % localfprint
-    print '  ec2 fingerprint: %s' % ec2fprint
+    print('local fingerprint: %s' % localfprint)
+    print('  ec2 fingerprint: %s' % ec2fprint)
     assert localfprint == ec2fprint

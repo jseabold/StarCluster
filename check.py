@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 import re
 import ast
@@ -27,7 +32,7 @@ def check(codeString, filename):
     # First, compile into an AST and handle syntax errors.
     try:
         tree = compile(codeString, filename, "exec", ast.PyCF_ONLY_AST)
-    except SyntaxError, value:
+    except SyntaxError as value:
         msg = value.args[0]
 
         (lineno, offset, text) = value.lineno, value.offset, value.text
@@ -37,19 +42,19 @@ def check(codeString, filename):
             # Avoid using msg, since for the only known case, it contains a
             # bogus message that claims the encoding the file declared was
             # unknown.
-            print >> sys.stderr, "%s: problem decoding source" % (filename, )
+            sys.stderr.write("%s: problem decoding source\n" % (filename, ))
         else:
             line = text.splitlines()[-1]
 
             if offset is not None:
                 offset = offset - (len(text) - len(line))
 
-            print >> sys.stderr, '%s:%d: %s' % (filename, lineno, msg)
-            print >> sys.stderr, line
+            sys.stderr.write('%s:%d: %s' % (filename, lineno, msg))
+            sys.stderr.write(line)
 
             if offset is not None:
-                print >> sys.stderr, " " * offset, "^"
-
+                sys.stderr(" " * offset, "^")
+        sys.stderr.flush()
         return 1
     else:
         # Okay, it's syntactically valid.  Now check it.
@@ -59,7 +64,7 @@ def check(codeString, filename):
                     if lines[message.lineno - 1].find('pyflakes:ignore') < 0]
         messages.sort(lambda a, b: cmp(a.lineno, b.lineno))
         for warning in messages:
-            print warning
+            print(warning)
         return len(messages)
 
 
@@ -71,8 +76,9 @@ def checkPath(filename):
     """
     try:
         return check(file(filename, 'U').read() + '\n', filename)
-    except IOError, msg:
-        print >> sys.stderr, "%s: %s" % (filename, msg.args[1])
+    except IOError as msg:
+        sys.stderr("%s: %s" % (filename, msg.args[1]))
+        sys.stderr.flush()
         return 1
 
 
@@ -83,13 +89,13 @@ def matches_file(file_name, match_files):
 
 def check_files(files, check):
     clean = True
-    print check['start_msg']
+    print(check['start_msg'])
     for file_name in files:
         if not matches_file(file_name, check.get('match_files', [])):
             continue
         if matches_file(file_name, check.get('ignore_files', [])):
             continue
-        print 'checking file: %s' % file_name
+        print('checking file: %s' % file_name)
         process = subprocess.Popen(check['command'] % file_name,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, shell=True)
@@ -98,7 +104,7 @@ def check_files(files, check):
         if output:
             output_lines = ['%s: %s' % (file_name, line) for line in
                             (out + err).splitlines()]
-            print '\n'.join(output_lines)
+            print('\n'.join(output_lines))
         if process.returncode != 0:
             clean = False
     if not clean:
@@ -161,7 +167,7 @@ def main(git_index=False, filetypes=['.py']):
         check_pep8(files)
         print(">>> Clean!")
     except Exception, e:
-        print
+        print()
         print(e)
         print("ERROR: please fix the errors and re-run this script")
         sys.exit(1)

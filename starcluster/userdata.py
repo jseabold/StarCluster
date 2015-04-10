@@ -132,7 +132,7 @@ def userdata_script_from_files(fileobjs, tar_fname=None, tar_file=None):
         ti.name = os.path.basename(f.name)
         ti.mtime = time.time()
         if f.read(2) == '#!':
-            ti.mode = 0755
+            ti.mode = 0o755
         f.seek(0)
         if hasattr(f, 'buf'):
             ti.size = len(f.buf)
@@ -251,4 +251,4 @@ if __name__ == '__main__':
     f = open('/tmp/tester.sh', 'w')
     f.write(script)
     f.close()
-    os.chmod('/tmp/tester.sh', 0750)
+    os.chmod('/tmp/tester.sh', 0o750)

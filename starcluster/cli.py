@@ -20,6 +20,11 @@ StarCluster Command Line Interface:
 
 starcluster [global-opts] action [action-opts] [<action-args> ...]
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 import sys
 import shlex
@@ -60,7 +65,8 @@ class StarClusterCLI(object):
         return self._gparser
 
     def print_header(self):
-        print >> sys.stderr, __description__.replace('\n', '', 1)
+        sys.stderr.write( __description__.replace('\n', '', 1))
+        sys.stderr.flush()
 
     def parse_subcommands(self, gparser=None):
         """
@@ -88,11 +94,11 @@ class StarClusterCLI(object):
         try:
             cfg = config.StarClusterConfig(gopts.CONFIG)
             cfg.load()
-        except exception.ConfigNotFound, e:
+        except exception.ConfigNotFound as e:
             log.error(e.msg)
             e.display_options()
             sys.exit(1)
-        except exception.ConfigError, e:
+        except exception.ConfigError as e:
             log.error(e.msg)
             sys.exit(1)
         gopts.CONFIG = cfg
@@ -153,8 +159,8 @@ class StarClusterCLI(object):
         try:
             mod = __import__(modname)
             fp.write("%s: %s\n" % (mod.__name__, mod.__version__))
-        except Exception, e:
-            print "error getting version for '%s' module: %s" % (modname, e)
+        except Exception as e:
+            print("error getting version for '%s' module: %s" % (modname, e))
 
     def bug_found(self):
         """
@@ -180,7 +186,7 @@ class StarClusterCLI(object):
         for line in logger.get_session_log():
             crashfile.write(line)
         crashfile.close()
-        print
+        print()
         log.error("Oops! Looks like you've found a bug in StarCluster")
         log.error("Crash report written to: %s" % static.CRASH_FILE)
         log.error("Please remove any sensitive data from the crash report")
@@ -272,18 +278,18 @@ class StarClusterCLI(object):
         # run the subcommand and handle exceptions
         try:
             sc.execute(args)
-        except (EC2ResponseError, S3ResponseError, BotoServerError), e:
+        except (EC2ResponseError, S3ResponseError, BotoServerError) as e:
             log.error("%s: %s" % (e.error_code, e.error_message),
                       exc_info=True)
             sys.exit(1)
-        except socket.error, e:
+        except socket.error as e:
             log.exception("Connection error:")
             log.error("Check your internet connection?")
             sys.exit(1)
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             log.error(e.format_excs())
             self.bug_found()
-        except exception.ClusterDoesNotExist, e:
+        except exception.ClusterDoesNotExist as e:
             cm = gopts.CONFIG.get_cluster_manager()
             cls = ''
             try:
@@ -296,7 +302,7 @@ class StarClusterCLI(object):
                 active_clusters = "(active clusters: %s)" % taglist
                 log.error(active_clusters)
             sys.exit(1)
-        except exception.BaseException, e:
+        except exception.BaseException as e:
             log.error(e.msg, extra={'__textwrap__': True})
             log.debug(e.msg, exc_info=True)
             sys.exit(1)
@@ -331,7 +337,7 @@ def main():
         warn_debug_file_moved()
         StarClusterCLI().main()
     except KeyboardInterrupt:
-        print "Interrupted, exiting."
+        print("Interrupted, exiting.")
         sys.exit(1)
 
 if __name__ == '__main__':

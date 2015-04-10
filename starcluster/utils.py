@@ -18,6 +18,10 @@
 """
 Utils module for StarCluster
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
@@ -90,14 +94,14 @@ def print_timing(msg=None, debug=False):
 
     >>> @print_timing
     ... def myfunc():
-    ...     print 'Running myfunc'
+    ...     print('Running myfunc')
     >>> myfunc()
     Running myfunc
     myfunc took 0.000 mins
 
     >>> @print_timing('My function')
     ... def myfunc():
-    ...    print 'Running myfunc'
+    ...    print('Running myfunc')
     >>> myfunc()
     Running myfunc
     My function took 0.000 mins
@@ -204,7 +208,7 @@ def make_one_liner(script):
         import os
         script = '''
         import os
-        print os.path.exists('hi')
+        print(os.path.exists('hi'))
         '''
         os.system(make_one_liner(script))
 
@@ -406,7 +410,7 @@ def tailf(filename):
             time.sleep(1)
             file.seek(where)
             continue
-        print line,  # already has newline
+        print(line, end="") # already has newline
 
 
 def v2fhelper(v, suff, version, weight):

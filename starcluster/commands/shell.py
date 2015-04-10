@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import sys
@@ -106,7 +110,7 @@ class CmdShell(CmdBase):
             log.info("Loading parallel IPython library")
             try:
                 from IPython.parallel import Client
-            except ImportError, e:
+            except ImportError as e:
                 self.parser.error(
                     "Error loading parallel IPython:"
                     "\n\n%s\n\n"
@@ -152,6 +156,6 @@ class CmdShell(CmdBase):
             try:
                 __import__(fullname)
                 local_ns[modname] = sys.modules[fullname]
-            except ImportError, e:
+            except ImportError as e:
                 log.error("Error loading module %s: %s" % (modname, e))
         utils.ipy_shell(local_ns=local_ns)

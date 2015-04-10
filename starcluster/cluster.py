@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
@@ -260,7 +264,7 @@ class ClusterManager(managers.Manager):
 
         Example:
             sg = '@sc-mycluster'
-            print get_tag_from_sg(sg)
+            print(get_tag_from_sg(sg))
             mycluster
         """
         regex = re.compile('^' + static.SECURITY_GROUP_TEMPLATE % '(.*)')
@@ -295,12 +299,12 @@ class ClusterManager(managers.Manager):
                 sep = '*' * 60
                 log.error('\n'.join([sep, e.msg, sep]),
                           extra=dict(__textwrap__=True))
-                print
+                print()
                 continue
             header = '%s (security group: %s)' % (tag, scg.name)
-            print '-' * len(header)
-            print header
-            print '-' * len(header)
+            print('-' * len(header))
+            print(header)
+            print('-' * len(header))
             nodes = cl.nodes
             try:
                 n = nodes[0]
@@ -312,13 +316,13 @@ class ClusterManager(managers.Manager):
             if state in ['pending', 'running']:
                 ltime = getattr(n, 'local_launch_time', 'N/A')
                 uptime = getattr(n, 'uptime', 'N/A')
-            print 'Launch time: %s' % ltime
-            print 'Uptime: %s' % uptime
+            print('Launch time: %s' % ltime)
+            print('Uptime: %s' % uptime)
             if scg.vpc_id:
-                print 'VPC: %s' % scg.vpc_id
-                print 'Subnet: %s' % getattr(n, 'subnet_id', 'N/A')
-            print 'Zone: %s' % getattr(n, 'placement', 'N/A')
-            print 'Keypair: %s' % getattr(n, 'key_name', 'N/A')
+                print('VPC: %s' % scg.vpc_id)
+                print('Subnet: %s' % getattr(n, 'subnet_id', 'N/A'))
+            print('Zone: %s' % getattr(n, 'placement', 'N/A'))
+            print('Keypair: %s' % getattr(n, 'key_name', 'N/A'))
             ebs_vols = []
             for node in nodes:
                 devices = node.attached_vols
@@ -331,12 +335,12 @@ class ClusterManager(managers.Manager):
                     status = d.status
                     ebs_vols.append((vol_id, node_id, dev, status))
             if ebs_vols:
-                print 'EBS volumes:'
+                print('EBS volumes:')
                 for vid, nid, dev, status in ebs_vols:
                     print('    %s on %s:%s (status: %s)' %
                           (vid, nid, dev, status))
             else:
-                print 'EBS volumes: N/A'
+                print('EBS volumes: N/A')
             spot_reqs = cl.spot_requests
             if spot_reqs:
                 active = len([s for s in spot_reqs if s.state == 'active'])
@@ -348,9 +352,9 @@ class ClusterManager(managers.Manager):
                     if msg:
                         msg += ', '
                     msg += '%d open' % opn
-                print 'Spot requests: %s' % msg
+                print('Spot requests: %s' % msg)
             if nodes:
-                print 'Cluster nodes:'
+                print('Cluster nodes:')
                 for node in nodes:
                     nodeline = "    %7s %s %s %s" % (node.alias, node.state,
                                                      node.id, node.addr or '')
@@ -359,11 +363,11 @@ class ClusterManager(managers.Manager):
                     if show_ssh_status:
                         ssh_status = {True: 'Up', False: 'Down'}
                         nodeline += ' (SSH: %s)' % ssh_status[node.is_up()]
-                    print nodeline
-                print 'Total nodes: %d' % len(nodes)
+                    print(nodeline)
+                print('Total nodes: %d' % len(nodes))
             else:
-                print 'Cluster nodes: N/A'
-            print
+                print('Cluster nodes: N/A')
+            print()
 
     def run_plugin(self, plugin_name, cluster_tag):
         """

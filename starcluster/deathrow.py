@@ -44,11 +44,11 @@ def _load_plugins(plugins, debug=True):
         class_name = setup_class.split('.')[-1]
         try:
             mod = __import__(mod_name, globals(), locals(), [class_name])
-        except SyntaxError, e:
+        except SyntaxError as e:
             raise exception.PluginSyntaxError(
                 "Plugin %s (%s) contains a syntax error at line %s" %
                 (plugin_name, e.filename, e.lineno))
-        except ImportError, e:
+        except ImportError as e:
             raise exception.PluginLoadError(
                 "Failed to import plugin %s: %s" %
                 (plugin_name, e[0]))

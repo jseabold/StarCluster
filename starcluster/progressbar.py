@@ -37,6 +37,10 @@ expands to fill the remaining width of the line.
 The progressbar module is very easy to use, yet very powerful. And
 automatically supports features like auto-resizing when available.
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 __author__ = "Nilton Volpato"
 __author_email__ = "first-name dot last-name @ gmail.com"

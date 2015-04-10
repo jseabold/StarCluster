@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import sys
 from starcluster import static
@@ -56,7 +60,7 @@ def test_nose():
         from nose import run
         run(argv=['sctest', '-s', '--exe', 'starcluster'], exit=False)
     except ImportError:
-        print 'error importing nose'
+        print('error importing nose')
 
 
 def test_pytest():
@@ -65,7 +69,7 @@ def test_pytest():
         import os
         pytest.main('-xvs %s' % os.path.dirname(__file__))
     except ImportError:
-        print 'error importing pytest'
+        print('error importing pytest')
 
 
 def test(use_nose=False):

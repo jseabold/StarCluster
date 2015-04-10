@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 from starcluster import completion
 from starcluster.logger import log
@@ -42,7 +46,7 @@ class ClusterCompleter(Completer):
             completion_list = [cm.get_tag_from_sg(sg.name)
                                for sg in clusters]
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -65,8 +69,8 @@ class NodeCompleter(Completer):
             compl_list.extend(["node%03d" % i
                                for i in range(1, num_instances)])
             return completion.ListCompleter(compl_list)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -79,7 +83,7 @@ class ImageCompleter(Completer):
             rimages = self.ec2.registered_images
             completion_list = [i.id for i in rimages]
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -93,7 +97,7 @@ class EBSImageCompleter(Completer):
             completion_list = [i.id for i in rimages if
                                i.root_device_type == "ebs"]
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -107,7 +111,7 @@ class S3ImageCompleter(Completer):
             completion_list = [i.id for i in rimages if
                                i.root_device_type == "instance-store"]
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -124,7 +128,7 @@ class InstanceCompleter(Completer):
             if self.show_dns_names:
                 completion_list.extend([i.dns_name for i in instances])
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)
 
 
@@ -136,5 +140,5 @@ class VolumeCompleter(Completer):
         try:
             completion_list = [v.id for v in self.ec2.get_volumes()]
             return completion.ListCompleter(completion_list)
-        except Exception, e:
+        except Exception as e:
             log.error('something went wrong fix me: %s' % e)

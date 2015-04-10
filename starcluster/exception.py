@@ -18,6 +18,10 @@
 """
 StarCluster Exception Classes
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 
@@ -274,21 +278,21 @@ class ConfigNotFound(ConfigError):
         cfg_file = open(self.cfg, 'w')
         cfg_file.write(config.config_template)
         cfg_file.close()
-        os.chmod(self.cfg, 0600)
+        os.chmod(self.cfg, 0o600)
         log.info("Config template written to %s" % self.cfg)
         log.info("Please customize the config template")
 
     def display_options(self):
-        print 'Options:'
-        print '--------'
-        print '[1] Show the StarCluster config template'
-        print '[2] Write config template to %s' % self.cfg
-        print '[q] Quit'
+        print('Options:')
+        print('--------')
+        print('[1] Show the StarCluster config template')
+        print('[2] Write config template to %s' % self.cfg)
+        print('[q] Quit')
         resp = raw_input('\nPlease enter your selection: ')
         if resp == '1':
-            print self.template
+            print(self.template)
         elif resp == '2':
-            print
+            print()
             self.create_config()
 
 
@@ -521,7 +525,7 @@ class ThreadPoolException(BaseException):
         self.exceptions = exceptions
 
     def print_excs(self):
-        print self.format_excs()
+        print(self.format_excs())
 
     def format_excs(self):
         excs = []

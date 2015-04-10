@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import time
 
@@ -211,7 +215,7 @@ class CmdStart(ClusterCompleter):
             if not template:
                 try:
                     template = self.cm.get_default_cluster_template()
-                except exception.NoDefaultTemplateFound, e:
+                except exception.NoDefaultTemplateFound as e:
                     try:
                         ctmpl = e.options[0]
                     except IndexError:

@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 from starcluster.logger import log
 from starcluster import exception
@@ -84,7 +88,7 @@ class CmdStop(ClusterCompleter):
                 cl = self.cm.get_cluster(cluster_name)
             except exception.ClusterDoesNotExist:
                 raise
-            except Exception, e:
+            except Exception as e:
                 log.debug("Failed to load cluster settings!", exc_info=True)
                 log.error("Failed to load cluster settings!")
                 if self.opts.force:
