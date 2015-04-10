@@ -33,11 +33,16 @@ import types
 import string
 import random
 import inspect
-import cPickle
-import StringIO
 import calendar
-import urlparse
 from datetime import datetime
+
+from six.moves import cStringIO as StringIO
+from six.moves import cPickle
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib import parse as urlparse
 
 import iptools
 import iso8601
@@ -225,7 +230,7 @@ def is_url(url):
     Returns True if the provided string is a valid url
     """
     try:
-        parts = urlparse.urlparse(url)
+        parts = urlparse(url)
         scheme = parts[0]
         netloc = parts[1]
         if scheme and netloc:
@@ -617,13 +622,13 @@ def decode_uncompress_load(string, use_json=False):
 
 
 def string_to_file(string, filename):
-    s = StringIO.StringIO(string)
+    s = StringIO(string)
     s.name = filename
     return s
 
 
 def strings_to_files(strings, fname_prefix=''):
-    fileobjs = [StringIO.StringIO(s) for s in strings]
+    fileobjs = [StringIO(s) for s in strings]
     if fname_prefix:
         fname_prefix += '_'
     for i, f in enumerate(fileobjs):

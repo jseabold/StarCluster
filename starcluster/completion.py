@@ -63,14 +63,12 @@ import optparse
 from pprint import pformat
 from optparse import OptionParser
 
-import optcomplete
-from optcomplete import AllCompleter
-from optcomplete import DirCompleter
-from optcomplete import ListCompleter
-from optcomplete import NoneCompleter
-from optcomplete import RegexCompleter
-
 from starcluster import static
+
+import optcomplete
+from optcomplete import (AllCompleter, DirCompleter, ListCompleter,
+                         NoneCompleter, RegexCompleter)
+
 
 debugfn = os.path.join(static.STARCLUSTER_LOG_DIR, 'completion-debug.log')
 

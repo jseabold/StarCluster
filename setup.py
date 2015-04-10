@@ -68,7 +68,6 @@ try:
                  install_requires=["paramiko>=1.12.1", "boto>=2.23.0",
                                    "workerpool>=0.9.2", "Jinja2>=2.7",
                                    "decorator>=3.4.0", "iptools>=0.6.1",
-                                   "optcomplete>=1.2-devel",
                                    "pycrypto>=2.5", "scp>=0.7.1",
                                    "iso8601>=0.1.8"],
                  include_package_data=True,

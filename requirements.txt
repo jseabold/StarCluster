@@ -1,13 +1,14 @@
 # core deps
+six
 boto>=2.25.0
 paramiko>=1.12.1
 scp>=0.7.1
-workerpool>=0.9.2
 Jinja2>=2.7.2
+-e git://github.com/oubiwann/workerpool#egg=workerpool
+-e git://github.com/oubiwann/optcomplete#egg=optcomplete
 decorator>=3.4.0
 pycrypto>=2.6.1
-iptools>=0.6.1
-optcomplete>=1.2.1
+iptools
 iso8601>=0.1.10
 # optional deps
 ipython>=1.1.0 # needed for shell command

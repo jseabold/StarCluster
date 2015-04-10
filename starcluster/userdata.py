@@ -22,7 +22,8 @@ import gzip
 import email
 import base64
 import tarfile
-import StringIO
+
+from six.moves import cStringIO as StringIO
 
 from email import encoders
 from email.mime import base
@@ -83,7 +84,7 @@ def mp_userdata_from_files(files, compress=False, multipart_mime=None):
         outer.attach(msg)
     userdata = outer.as_string()
     if compress:
-        s = StringIO.StringIO()
+        s = StringIO()
         gfile = gzip.GzipFile(fileobj=s, mode='w')
         gfile.write(userdata)
         gfile.close()
@@ -94,7 +95,7 @@ def mp_userdata_from_files(files, compress=False, multipart_mime=None):
 
 def get_mp_from_userdata(userdata, decompress=False):
     if decompress:
-        zfile = StringIO.StringIO(userdata)
+        zfile = StringIO(userdata)
         gfile = gzip.GzipFile(fileobj=zfile, mode='r')
         userdata = gfile.read()
         gfile.close()
@@ -103,9 +104,10 @@ def get_mp_from_userdata(userdata, decompress=False):
 
 SCRIPT_TEMPLATE = """\
 #!/usr/bin/env python
-import os, sys, stat, gzip, tarfile, StringIO
+import os, sys, stat, gzip, tarfile
+from six import cStringIO as StringIO
 os.chdir(os.path.dirname(sys.argv[0]))
-decoded = StringIO.StringIO('''%s'''.decode('base64'))
+decoded = StringIO('''%s'''.decode('base64'))
 gf = gzip.GzipFile(mode='r', fileobj=decoded)
 tf = tarfile.TarFile(mode='r', fileobj=gf)
 for ti in tf:
@@ -122,7 +124,7 @@ def userdata_script_from_files(fileobjs, tar_fname=None, tar_file=None):
         tf = tar_file
         tfd = tf.fileobj
     else:
-        tfd = StringIO.StringIO()
+        tfd = StringIO()
         tf = tar_file or tarfile.TarFile(tar_fname, mode='w', fileobj=tfd)
     for f in fileobjs:
         if hasattr(f, 'fileno'):
@@ -139,13 +141,13 @@ def userdata_script_from_files(fileobjs, tar_fname=None, tar_file=None):
         tf.addfile(ti, f)
     tf.close()
     tfd.seek(0)
-    gfd = StringIO.StringIO()
+    gfd = StringIO()
     gzip_fname = os.path.extsep.join([tar_fname, '.gz'])
     gf = gzip.GzipFile(gzip_fname, mode='w', fileobj=gfd)
     gf.write(tfd.read())
     gf.close()
     gfd.seek(0)
-    gfs = StringIO.StringIO(gfd.read())
+    gfs = StringIO(gfd.read())
     b64str = base64.b64encode(gfs.read())
     script = SCRIPT_TEMPLATE % b64str
     return script
@@ -154,8 +156,8 @@ def userdata_script_from_files(fileobjs, tar_fname=None, tar_file=None):
 def get_tar_from_userdata(string, mode='r'):
     r = re.compile("\('''(.*)'''\.decode")
     b64str = r.search(string).groups()[0]
-    gzf = StringIO.StringIO(b64str.decode('base64'))
-    tarstr = StringIO.StringIO(gzip.GzipFile(fileobj=gzf, mode='r').read())
+    gzf = StringIO(b64str.decode('base64'))
+    tarstr = StringIO(gzip.GzipFile(fileobj=gzf, mode='r').read())
     return tarfile.TarFile(fileobj=tarstr, mode=mode)
 
 
@@ -219,12 +221,12 @@ def append_to_userdata(userdata_string, fileobjs, decompress=True):
 def remove_from_userdata(userdata_string, filenames, decompress=True):
     if userdata_string.startswith('#!'):
         orig_tf = get_tar_from_userdata(userdata_string)
-        tarstr = StringIO.StringIO()
+        tarstr = StringIO()
         new_tf = tarfile.TarFile(fileobj=tarstr, mode='w')
         for f in orig_tf.getmembers():
             if f.name in filenames:
                 continue
-            contents = StringIO.StringIO(orig_tf.extractfile(f).read())
+            contents = StringIO(orig_tf.extractfile(f).read())
             new_tf.addfile(f, contents)
         new_tf.close()
         tarstr.seek(0)

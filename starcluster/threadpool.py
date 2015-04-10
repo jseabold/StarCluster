@@ -19,10 +19,11 @@
 ThreadPool module for StarCluster based on WorkerPool
 """
 import time
-import Queue
-import thread
+import threading
 import traceback
 import workerpool
+
+from six.moves import queue as Queue
 
 from starcluster import exception
 from starcluster import progressbar
@@ -50,7 +51,8 @@ class DaemonWorker(workerpool.workers.Worker):
                 break
             except Exception as e:
                 tb_msg = traceback.format_exc()
-                jid = job.jobid or str(thread.get_ident())
+                thread = threading.local()
+                jid = job.jobid or str(thread.ident)
                 self.jobs.store_exception([e, tb_msg, jid])
             finally:
                 self.jobs.task_done()

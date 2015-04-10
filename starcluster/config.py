@@ -21,8 +21,9 @@ from __future__ import unicode_literals
 
 import os
 import urllib
-import StringIO
-import ConfigParser
+
+from six.moves import cStringIO as StringIO
+from six.moves import configparser as ConfigParser
 
 from starcluster import utils
 from starcluster import static
@@ -225,7 +226,7 @@ class StarClusterConfig(object):
                 includes = self.globals.get('include')
                 if not includes:
                     return cp
-                mashup = StringIO.StringIO()
+                mashup = StringIO()
                 cfg = self._get_cfg_fp()
                 mashup.write(cfg.read() + '\n')
                 for include in includes:
@@ -726,7 +727,7 @@ class InlineCommentsIgnoredConfigParser(ConfigParser.ConfigParser):
         # We don't use the file iterator here because ConfigParser.readfp()
         # guarantees to only call readline() on fp, so we want to adhere to
         # this as well.
-        commentless_fp = StringIO.StringIO()
+        commentless_fp = StringIO()
         line = fp.readline()
         while line:
             pound_pos = line.find('#')
