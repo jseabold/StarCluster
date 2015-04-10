@@ -20,8 +20,8 @@ import os
 import sys
 
 if sys.version_info < (2, 6):
-    error = "ERROR: StarCluster requires Python 2.6+ ... exiting."
-    print >> sys.stderr, error
+    error = "ERROR: StarCluster requires Python 2.6+ ... exiting.\n"
+    sys.stderr.write(error)
     sys.exit(1)
 
 try:
@@ -123,7 +123,7 @@ except ImportError:
 
 VERSION = 0.9999
 static = os.path.join('starcluster', 'static.py')
-execfile(static)  # pull VERSION from static.py
+exec(open(static).read())  # pull VERSION from static.py
 
 README = open('README.rst').read()
 
@@ -154,6 +154,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
         'Operating System :: POSIX',
         'Topic :: Education',

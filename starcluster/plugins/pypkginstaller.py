@@ -38,6 +38,11 @@ and the latest released version of some dependencies::
                git+http://github.com/ipython/ipython.git
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from starcluster.clustersetup import DefaultClusterSetup
 from starcluster.logger import log
 from starcluster.utils import print_timing

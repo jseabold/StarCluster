@@ -52,6 +52,6 @@ class BotoPlugin(clustersetup.ClusterSetup):
                 f = mssh.remote_file(botocfg, 'w')
                 f.write(BOTO_CFG_TEMPLATE % master.ec2.__dict__)
                 f.close()
-            mssh.chmod(0400, botocfg)
+            mssh.chmod(0o400, botocfg)
         else:
             log.warn("AWS credentials already present - skipping install")

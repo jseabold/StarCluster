@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
@@ -365,7 +369,7 @@ class SGEStats(object):
             flat = ','.join(str(n) for n in bits) + '\n'
             f.write(flat)
             f.close()
-        except IOError, e:
+        except IOError as e:
             raise exception.BaseException(str(e))
 
 
@@ -452,7 +456,7 @@ class SGELoadBalancer(LoadBalancer):
         if not self._visualizer:
             try:
                 from starcluster.balancers.sge import visualizer
-            except ImportError, e:
+            except ImportError as e:
                 log.error("Error importing visualizer:")
                 log.error(str(e))
                 log.error("check that matplotlib and numpy are installed and:")
@@ -489,7 +493,7 @@ class SGELoadBalancer(LoadBalancer):
                 else:
                     os.mkdir(directory)
                     log.info("Created single directory %s" % directory)
-            except IOError, e:
+            except IOError as e:
                 raise exception.BaseException(str(e))
 
     def get_remote_time(self):
@@ -649,7 +653,7 @@ class SGELoadBalancer(LoadBalancer):
             if self.plot_stats:
                 try:
                     self.visualizer.graph_all()
-                except IOError, e:
+                except IOError as e:
                     raise exception.BaseException(str(e))
             # evaluate if cluster should be terminated
             if self.kill_cluster:

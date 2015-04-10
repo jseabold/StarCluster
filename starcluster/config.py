@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import urllib
@@ -130,7 +134,7 @@ class StarClusterConfig(object):
                 raise exception.ConfigError("url %s does not exist" % url)
             fp.name = url
             return fp
-        except IOError, e:
+        except IOError as e:
             raise exception.ConfigError(
                 "error loading config from url %s\n%s" % (url, e))
 
@@ -242,7 +246,7 @@ class StarClusterConfig(object):
             return cp
         except ConfigParser.MissingSectionHeaderError:
             raise exception.ConfigHasNoSections(cfg.name)
-        except ConfigParser.ParsingError, e:
+        except ConfigParser.ParsingError as e:
             raise exception.ConfigError(e)
 
     def reload(self):

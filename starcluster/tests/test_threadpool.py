@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import logging
 import tempfile
@@ -56,9 +60,9 @@ class TestThreadPool(tests.StarClusterTest):
             for i in range(self._jobs):
                 pool.simple_job(self._no_args, jobid=i)
             results = pool.wait(numtasks=self._jobs)
-            print "no_args: %s" % results
+            print("no_args: %s" % results)
             assert results.count(None) == self._jobs
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             raise Exception(e.format_excs())
 
     def test_args_only(self):
@@ -68,9 +72,9 @@ class TestThreadPool(tests.StarClusterTest):
                 pool.simple_job(self._args_only, i, jobid=i)
             results = pool.wait(numtasks=self._jobs)
             results.sort()
-            print "args_only: %s" % results
+            print("args_only: %s" % results)
             assert results == range(self._jobs)
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             raise Exception(e.format_excs())
 
     def test_kwargs_only(self):
@@ -80,9 +84,9 @@ class TestThreadPool(tests.StarClusterTest):
                 pool.simple_job(self._kwargs_only,
                                 kwargs=dict(mykw=self._mykw), jobid=i)
             results = pool.wait(numtasks=self._jobs)
-            print "kwargs_only: %s" % results
+            print("kwargs_only: %s" % results)
             assert results.count(self._mykw) == self._jobs
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             raise Exception(e.format_excs())
 
     def test_args_and_kwargs(self):
@@ -93,10 +97,10 @@ class TestThreadPool(tests.StarClusterTest):
                                 kwargs=dict(mykw=self._mykw), jobid=i)
             results = pool.wait(numtasks=self._jobs)
             results.sort()
-            print "args_and_kwargs: %s" % results
+            print("args_and_kwargs: %s" % results)
             assert results == zip(range(self._jobs),
                                   [dict(mykw=self._mykw)] * self._jobs)
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             raise Exception(e.format_excs())
 
     def test_map(self):
@@ -112,7 +116,7 @@ class TestThreadPool(tests.StarClusterTest):
             calc = self.pool.map(lambda x: x ** 2, range(r))
             calc.sort()
             assert ref == calc
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             raise Exception(e.format_excs())
 
     def test_map_with_jobid(self):
@@ -125,7 +129,7 @@ class TestThreadPool(tests.StarClusterTest):
             assert ref == calc
             self.pool.map(lambda x: x ** 2, range(r) + ['21'],
                           jobid_fn=lambda x: x)
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             exc, tb_msg, jobid = e.exceptions[0]
             assert jobid == '21'
 
@@ -134,6 +138,6 @@ class TestThreadPool(tests.StarClusterTest):
         r = 10
         try:
             self.pool.map(lambda x: x ** 2, [str(i) for i in range(r)])
-        except exception.ThreadPoolException, e:
+        except exception.ThreadPoolException as e:
             assert len(e.exceptions) == r
             assert self.pool._exception_queue.qsize() == 0

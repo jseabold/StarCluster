@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import re
 import time
@@ -118,7 +122,7 @@ class Node(object):
             try:
                 raw = self._get_user_data()
                 self._user_data = userdata.unbundle_userdata(raw)
-            except IOError, e:
+            except IOError as e:
                 parent_cluster = self.parent_cluster
                 if self.parent_cluster:
                     raise exception.IncompatibleCluster(parent_cluster)
@@ -165,11 +169,11 @@ class Node(object):
             try:
                 mod = __import__(mod_path, fromlist=[klass_name])
                 plug = getattr(mod, klass_name)(*args, **kwargs)
-            except SyntaxError, e:
+            except SyntaxError as e:
                 raise exception.PluginSyntaxError(
                     "Plugin %s (%s) contains a syntax error at line %s" %
                     (klass_name, e.filename, e.lineno))
-            except ImportError, e:
+            except ImportError as e:
                 raise exception.PluginLoadError(
                     "Failed to import plugin %s: %s" %
                     (klass_name, e[0]))
@@ -517,13 +521,13 @@ class Node(object):
             pub_key = self.ssh.remote_file(public_key, 'w')
             pub_key.write(pubkey_contents)
             pub_key.chown(user.pw_uid, user.pw_gid)
-            pub_key.chmod(0400)
+            pub_key.chmod(0o400)
             pub_key.close()
             # copy private key to remote machine
             priv_key = self.ssh.remote_file(private_key, 'w')
             key.write_private_key(priv_key)
             priv_key.chown(user.pw_uid, user.pw_gid)
-            priv_key.chmod(0400)
+            priv_key.chmod(0o400)
             priv_key.close()
         if not auth_new_key or not auth_conn_key:
             return key
@@ -547,7 +551,7 @@ class Node(object):
                 log.debug("adding conn_pubkey_contents")
                 auth_keys.write('%s\n' % conn_pubkey_contents)
         auth_keys.chown(user.pw_uid, user.pw_gid)
-        auth_keys.chmod(0600)
+        auth_keys.chmod(0o600)
         auth_keys.close()
         return key
 
@@ -822,7 +826,7 @@ class Node(object):
         self.remove_from_etc_hosts(nodes)
         host_file = self.ssh.remote_file('/etc/hosts', 'a')
         for node in nodes:
-            print >> host_file, node.get_hosts_entry()
+            host_file.write(node.get_hosts_entry() + "\n")
         host_file.close()
 
     def remove_from_etc_hosts(self, nodes):
@@ -1031,13 +1035,13 @@ class Node(object):
             try:
                 private_ip = self.ssh.execute(
                     'python -c '
-                    '"import socket; print socket.gethostbyname(\'%s\')"' %
+                    '"import socket; print(socket.gethostbyname(\'%s\'))"' %
                     self.private_dns_name)[0].strip()
                 log.debug("determined instance %s's private ip to be %s" %
                           (self.id, private_ip))
                 self.instance.private_ip_address = private_ip
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
                 return False
         return True
 

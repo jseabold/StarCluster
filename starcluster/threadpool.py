@@ -48,7 +48,7 @@ class DaemonWorker(workerpool.workers.Worker):
                 job.run()
             except workerpool.exceptions.TerminationNotice:
                 break
-            except Exception, e:
+            except Exception as e:
                 tb_msg = traceback.format_exc()
                 jid = job.jobid or str(thread.get_ident())
                 self.jobs.store_exception([e, tb_msg, jid])

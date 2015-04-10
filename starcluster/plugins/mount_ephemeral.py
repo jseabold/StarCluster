@@ -12,7 +12,7 @@ class MountEphemeralPlugin(ClusterSetup):
         node.ssh.execute("sh ./mount_ephemeral.sh")
 
     def run(self, nodes, master, user, user_shell, volumes):
-	for node in nodes:
+        for node in nodes:
             self.mountEphemeralStorage(node)
 
     def on_add_node(self, node, nodes, master, user, user_shell, volumes):

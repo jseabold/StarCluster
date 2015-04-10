@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import sys
@@ -64,10 +68,10 @@ class BaseHandler(httpserv.BaseHTTPRequestHandler):
     error_message_format = ERROR_MSG
 
     def do_GET(self):
-        print 'GET not supported'
+        print('GET not supported')
 
     def do_POST(self):
-        print 'POSTing not supported'
+        print('POSTing not supported')
 
     def do_shutdown(self):
         log.info("Shutting down server...")
@@ -133,7 +137,7 @@ class TemplateHandler(DocrootHandler):
             self.send_header('Content-type', content_type)
             self.end_headers()
             self.wfile.write(data)
-        except IOError, templates.TemplateNotFound:
+        except (IOError, templates.TemplateNotFound):
             self.send_error(404, 'File Not Found: %s' % self.path)
             return
 
@@ -218,7 +222,7 @@ def main(path, interface="localhost", port=8080):
         log.info('Document_root = %s' % docroot)
         server.serve_forever()
     except KeyboardInterrupt:
-        print '^C received, shutting down server'
+        print('^C received, shutting down server')
         server.socket.close()
 
 

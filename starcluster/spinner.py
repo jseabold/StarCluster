@@ -14,6 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import sys
 import time
@@ -75,7 +79,7 @@ class Spinner(Thread):
 
     def run(self):
         # the comma keeps print from ending with a newline.
-        print " " * self.spin_screen_pos,
+        print(" " * self.spin_screen_pos, end="")
         while True:
             if self.stop_spinner:
                 self.done()
@@ -84,11 +88,11 @@ class Spinner(Thread):
             self.char_index_pos = self.Print(self.char_index_pos)
 
     def test(self, sleep=3.4):
-        print 'Waiting for process...',
+        print('Waiting for process... ', end="")
         self.start()
         time.sleep(sleep)
         self.stop()
-        print 'Process is finished...'
+        print('Process is finished...')
 
 if __name__ == "__main__":
     for i in range(0, 10):

@@ -14,6 +14,11 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import posixpath
 
 from starcluster import clustersetup
@@ -117,7 +122,7 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         master = self._master
         master.ssh.execute("cd %s && sed 's/AddQueue/#AddQueue/g' inst_sge > "
                            "%s" % (self.SGE_ROOT, self.SGE_INST))
-        master.ssh.chmod(0755, self._sge_path(self.SGE_INST))
+        master.ssh.chmod(0o755, self._sge_path(self.SGE_INST))
 
     def _setup_sge(self):
         """

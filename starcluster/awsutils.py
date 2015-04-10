@@ -18,6 +18,10 @@
 """
 EC2/S3 Utility Classes
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
@@ -200,9 +204,9 @@ class EasyEC2(EasyAWS):
         regions = self.regions.items()
         regions.sort(reverse=True)
         for name, endpoint in regions:
-            print 'name: ', name
-            print 'endpoint: ', endpoint.endpoint
-            print
+            print('name: ', name)
+            print('endpoint: ', endpoint.endpoint)
+            print()
 
     @property
     def registered_images(self):
@@ -681,7 +685,7 @@ class EasyEC2(EasyAWS):
                 kfile = open(output_file, 'wb')
                 kfile.write(kp.material)
                 kfile.close()
-                os.chmod(output_file, 0400)
+                os.chmod(output_file, 0o400)
             except IOError as e:
                 raise exception.BaseException(str(e))
         return kp
@@ -706,8 +710,8 @@ class EasyEC2(EasyAWS):
             pass
 
     def __print_header(self, msg):
-        print msg
-        print "-" * len(msg)
+        print(msg)
+        print("-" * len(msg))
 
     def get_image_name(self, img):
         image_name = re.sub('\.manifest\.xml$', '',
@@ -801,25 +805,25 @@ class EasyEC2(EasyAWS):
             image_id = lspec.image_id
             zone = lspec.placement
             groups = ', '.join([g.id for g in lspec.groups])
-            print "id: %s" % spot_id
-            print "price: $%0.2f" % price
-            print "status: %s" % status
-            print "message: %s" % message
-            print "spot_request_type: %s" % type
-            print "state: %s" % state
-            print "instance_id: %s" % instance_id
-            print "instance_type: %s" % instance_type
-            print "image_id: %s" % image_id
-            print "zone: %s" % zone
-            print "create_time: %s" % create_time
-            print "launch_group: %s" % launch_group
-            print "zone_group: %s" % zone_group
-            print "security_groups: %s" % groups
-            print
+            print("id: %s" % spot_id)
+            print("price: $%0.2f" % price)
+            print("status: %s" % status)
+            print("message: %s" % message)
+            print("spot_request_type: %s" % type)
+            print("state: %s" % state)
+            print("instance_id: %s" % instance_id)
+            print("instance_type: %s" % instance_type)
+            print("image_id: %s" % image_id)
+            print("zone: %s" % zone)
+            print("create_time: %s" % create_time)
+            print("launch_group: %s" % launch_group)
+            print("zone_group: %s" % zone_group)
+            print("security_groups: %s" % groups)
+            print()
         if not spots:
             log.info("No spot instance requests found...")
         else:
-            print 'Total: %s' % len(spots)
+            print('Total: %s' % len(spots))
 
     def show_instance(self, instance):
         instance_id = instance.id or 'N/A'
@@ -841,26 +845,26 @@ class EasyEC2(EasyAWS):
         subnet_id = instance.subnet_id or 'N/A'
         if state == 'stopped':
             uptime = 'N/A'
-        print "id: %s" % instance_id
-        print "dns_name: %s" % dns_name
-        print "private_dns_name: %s" % private_dns_name
+        print("id: %s" % instance_id)
+        print("dns_name: %s" % dns_name)
+        print("private_dns_name: %s" % private_dns_name)
         if instance.reason:
-            print "state: %s (%s)" % (state, instance.reason)
+            print("state: %s (%s)" % (state, instance.reason))
         else:
-            print "state: %s" % state
-        print "public_ip: %s" % public_ip
-        print "private_ip: %s" % private_ip
-        print "vpc: %s" % vpc_id
-        print "subnet: %s" % subnet_id
-        print "zone: %s" % zone
-        print "ami: %s" % ami
-        print "virtualization: %s" % virt_type
-        print "type: %s" % instance_type
-        print "groups: %s" % groups
-        print "keypair: %s" % keypair
-        print "uptime: %s" % uptime
-        print "tags: %s" % tags
-        print
+            print("state: %s" % state)
+        print("public_ip: %s" % public_ip)
+        print("private_ip: %s" % private_ip)
+        print("vpc: %s" % vpc_id)
+        print("subnet: %s" % subnet_id)
+        print("zone: %s" % zone)
+        print("ami: %s" % ami)
+        print("virtualization: %s" % virt_type)
+        print("type: %s" % instance_type)
+        print("groups: %s" % groups)
+        print("keypair: %s" % keypair)
+        print("uptime: %s" % uptime)
+        print("tags: %s" % tags)
+        print()
 
     def list_all_instances(self, show_terminated=False):
         tstates = ['shutting-down', 'terminated']
@@ -872,7 +876,7 @@ class EasyEC2(EasyAWS):
             return
         for instance in insts:
             self.show_instance(instance)
-        print 'Total: %s' % len(insts)
+        print('Total: %s' % len(insts))
 
     def list_images(self, images, sort_key=None, reverse=False):
         def get_key(obj):
@@ -883,11 +887,11 @@ class EasyEC2(EasyAWS):
         imgs_i386.sort(key=sort_key, reverse=reverse)
         imgs_x86_64 = [img for img in images if img.architecture == "x86_64"]
         imgs_x86_64.sort(key=sort_key, reverse=reverse)
-        print
+        print()
         self.__list_images("32bit Images:", imgs_i386)
         self.__list_images("\n64bit Images:", imgs_x86_64)
-        print "\ntotal images: %d" % len(images)
-        print
+        print("\ntotal images: %d" % len(images))
+        print()
 
     def list_registered_images(self):
         images = self.registered_images
@@ -909,7 +913,7 @@ class EasyEC2(EasyAWS):
                 template += ' (HVM-EBS)'
             elif img.root_device_type == 'ebs':
                 template += ' (EBS)'
-            print template % (counter, img.id, img.region.name, name)
+            print(template % (counter, img.id, img.region.name, name))
             counter += 1
 
     def remove_image_files(self, image_name, pretend=True):
@@ -986,7 +990,7 @@ class EasyEC2(EasyAWS):
         max_length = max([len(key.name) for key in keypairs])
         templ = "%" + str(max_length) + "s  %s"
         for key in self.keypairs:
-            print templ % (key.name, key.fingerprint)
+            print(templ % (key.name, key.fingerprint))
 
     def list_zones(self, region=None):
         conn = self.conn
@@ -1005,10 +1009,10 @@ class EasyEC2(EasyAWS):
             conn = self.connection_authenticator(
                 self.aws_access_key_id, self.aws_secret_access_key, **kwargs)
         for zone in conn.get_all_zones():
-            print 'name: ', zone.name
-            print 'region: ', zone.region.name
-            print 'status: ', zone.state
-            print
+            print('name: ', zone.name)
+            print('region: ', zone.region.name)
+            print('status: ', zone.state)
+            print()
 
     def get_zones(self, filters=None):
         return self.conn.get_all_zones(filters=filters)
@@ -1319,7 +1323,7 @@ class EasyEC2(EasyAWS):
         """
         files = self.get_image_files(image_id)
         for file in files:
-            print file.name
+            print(file.name)
 
     @property
     def instances(self):
@@ -1477,21 +1481,21 @@ class EasyEC2(EasyAWS):
         vols.sort(key=lambda x: x.create_time)
         if vols:
             for vol in vols:
-                print "volume_id: %s" % vol.id
-                print "size: %sGB" % vol.size
-                print "status: %s" % vol.status
+                print("volume_id: %s" % vol.id)
+                print("size: %sGB" % vol.size)
+                print("status: %s" % vol.status)
                 if vol.attachment_state():
-                    print "attachment_status: %s" % vol.attachment_state()
-                print "availability_zone: %s" % vol.zone
+                    print("attachment_status: %s" % vol.attachment_state())
+                print("availability_zone: %s" % vol.zone)
                 if vol.snapshot_id:
-                    print "snapshot_id: %s" % vol.snapshot_id
+                    print("snapshot_id: %s" % vol.snapshot_id)
                 snapshots = self.get_snapshots(volume_ids=[vol.id])
                 if snapshots:
                     snap_list = ' '.join([snap.id for snap in snapshots])
-                    print 'snapshots: %s' % snap_list
+                    print('snapshots: %s' % snap_list)
                 if vol.create_time:
                     lt = utils.iso_to_localtime_tuple(vol.create_time)
-                print "create_time: %s" % lt
+                print("create_time: %s" % lt)
                 tags = []
                 for tag in vol.tags:
                     val = vol.tags.get(tag)
@@ -1500,9 +1504,9 @@ class EasyEC2(EasyAWS):
                     else:
                         tags.append(tag)
                 if tags:
-                    print "tags: %s" % ', '.join(tags)
-                print
-        print 'Total: %s' % len(vols)
+                    print("tags: %s" % ', '.join(tags))
+                print()
+        print('Total: %s' % len(vols))
 
     def get_spot_history(self, instance_type, start=None, end=None, zone=None,
                          plot=False, plot_server_interface="localhost",
@@ -1585,7 +1589,7 @@ class EasyEC2(EasyAWS):
         console_output = ''.join([c for c in console_output if c in
                                   string.printable])
         if console_output:
-            print console_output
+            print(console_output)
         else:
             log.info("No console output available...")
 
@@ -1666,7 +1670,7 @@ class EasyS3(EasyAWS):
         bucket = self.get_bucket(bucketname)
         for file in bucket.list():
             if file.name:
-                print file.name
+                print(file.name)
 
     def get_buckets(self):
         try:
@@ -1678,7 +1682,7 @@ class EasyS3(EasyAWS):
 
     def list_buckets(self):
         for bucket in self.get_buckets():
-            print bucket.name
+            print(bucket.name)
 
     def get_bucket_files(self, bucketname):
         bucket = self.get_bucket(bucketname)
