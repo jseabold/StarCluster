@@ -19,18 +19,22 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
-import re
-import sys
-import stat
-import glob
 import atexit
-import string
-import socket
+import base64
 import fnmatch
+import glob
 import hashlib
-import warnings
+import os
 import posixpath
+import re
+import socket
+import stat
+import string
+import sys
+import warnings
+
+import six
+from six.moves import range
 
 import scp
 import paramiko
@@ -806,20 +810,22 @@ class SSHGlob(object):
 
 def insert_char_every_n_chars(string, char='\n', every=64):
     return char.join(
-        string[i:i + every] for i in xrange(0, len(string), every))
+        string[i:i + every] for i in range(0, len(string), every))
 
 
 def get_rsa_key(key_location=None, key_file_obj=None, passphrase=None,
                 use_pycrypto=False):
-    key_fobj = key_file_obj or open(key_location)
+    data = key_file_obj or open(key_location)
+    if six.PY3:
+        data = data.read()
     try:
         if use_pycrypto:
-            key = RSA.importKey(key_fobj, passphrase=passphrase)
+            key = RSA.importKey(data, passphrase=passphrase)
         else:
-            key = paramiko.RSAKey.from_private_key(key_fobj,
+            key = paramiko.RSAKey.from_private_key(data,
                                                    password=passphrase)
         return key
-    except (paramiko.SSHException, ValueError):
+    except (paramiko.SSHException, ValueError) as err:
         raise exception.SSHError(
             "Invalid RSA private key file or missing passphrase: %s" %
             key_location)
@@ -827,9 +833,11 @@ def get_rsa_key(key_location=None, key_file_obj=None, passphrase=None,
 
 def get_dsa_key(key_location=None, key_file_obj=None, passphrase=None,
                 use_pycrypto=False):
-    key_fobj = key_file_obj or open(key_location)
+    data = key_file_obj or open(key_location)
+    if six.PY3:
+        data = base64.b64decode(data.read())
     try:
-        key = paramiko.DSSKey.from_private_key(key_fobj,
+        key = paramiko.DSSKey.from_private_key(data,
                                                password=passphrase)
         if use_pycrypto:
             key = DSA.construct((key.y, key.g, key.p, key.q, key.x))
@@ -858,7 +866,8 @@ def get_private_rsa_fingerprint(key_location=None, key_file_obj=None,
     """
     k = get_rsa_key(key_location=key_location, key_file_obj=key_file_obj,
                     passphrase=passphrase, use_pycrypto=True)
-    sha1digest = hashlib.sha1(k.exportKey('DER', pkcs=8)).hexdigest()
+    data = k.exportKey('DER', pkcs=8)
+    sha1digest = hashlib.sha1(data).hexdigest()
     fingerprint = insert_char_every_n_chars(sha1digest, ':', 2)
     key = key_location or key_file_obj
     log.debug("rsa private key fingerprint (%s): %s" % (key, fingerprint))
