@@ -23,18 +23,20 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
-import re
-import sys
-import zlib
-import time
-import json
-import types
-import string
-import random
-import inspect
+import base64
 import calendar
 from datetime import datetime
+import gzip
+import inspect
+import json
+import os
+import random
+import re
+import string
+import sys
+import time
+import types
+import zlib
 
 import six
 from six.moves import cStringIO as StringIO
@@ -611,11 +613,38 @@ class struct_passwd(tuple):
             raise AttributeError
 
 
+def gzip_compress(data):
+    if six.PY2:
+        s = StringIO()
+        gfile = gzip.GzipFile(fileobj=s, mode='w')
+        gfile.write(data)
+        gfile.close()
+        s.seek(0)
+        return s.read()
+    else:
+        return gzip.compress(bytes(data, 'latin-1'))
+
+
+def gzip_uncompress(data):
+    if six.PY2:
+        zfile = StringIO(data)
+        gfile = gzip.GzipFile(fileobj=zfile, mode='r')
+        data = gfile.read()
+        gfile.close()
+        return data
+    else:
+        return gzip.uncompress(data)
+
+
 def dump_compress_encode(obj, use_json=False, chunk_size=None):
     serializer = cPickle
     if use_json:
         serializer = json
-    p = zlib.compress(serializer.dumps(obj)).encode('base64')
+    if six.PY2:
+        p = base64.b64encode(zlib.compress(serializer.dumps(obj)))
+    if six.PY3:
+        p = base64.b64encode(zlib.compress(
+            bytes(serializer.dumps(obj), 'latin-1'))).decode('latin-1')
     if chunk_size is not None:
         return [p[i:i + chunk_size] for i in range(0, len(p), chunk_size)]
     return p

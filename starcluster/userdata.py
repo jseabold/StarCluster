@@ -23,6 +23,7 @@ import email
 import base64
 import tarfile
 
+import six
 from six.moves import cStringIO as StringIO
 
 from email import encoders
@@ -30,8 +31,8 @@ from email.mime import base
 from email.mime import text
 from email.mime import multipart
 
-from starcluster import utils
 from starcluster import exception
+from starcluster import utils
 
 
 starts_with_mappings = {
@@ -50,7 +51,7 @@ def _get_type_from_fp(fp):
     line = fp.readline()
     fp.seek(0)
     # slist is sorted longest first
-    slist = starts_with_mappings.keys()
+    slist = list(starts_with_mappings.keys())
     slist.sort(key=lambda e: -1 * len(e))
     for sstr in slist:
         if line.startswith(sstr):
@@ -84,21 +85,13 @@ def mp_userdata_from_files(files, compress=False, multipart_mime=None):
         outer.attach(msg)
     userdata = outer.as_string()
     if compress:
-        s = StringIO()
-        gfile = gzip.GzipFile(fileobj=s, mode='w')
-        gfile.write(userdata)
-        gfile.close()
-        s.seek(0)
-        userdata = s.read()
+        userdata = utils.gzip_compress(userdata)
     return userdata
 
 
 def get_mp_from_userdata(userdata, decompress=False):
     if decompress:
-        zfile = StringIO(userdata)
-        gfile = gzip.GzipFile(fileobj=zfile, mode='r')
-        userdata = gfile.read()
-        gfile.close()
+        userdata = utils.gzip_uncompress(userdata)
     return email.message_from_string(userdata)
 
 
