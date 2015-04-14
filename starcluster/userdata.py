@@ -91,7 +91,9 @@ def mp_userdata_from_files(files, compress=False, multipart_mime=None):
 
 def get_mp_from_userdata(userdata, decompress=False):
     if decompress:
-        userdata = utils.gzip_uncompress(userdata)
+        userdata = utils.gzip_decompress(userdata)
+    if isinstance(userdata, bytes):
+        userdata = userdata.decode('utf-8')
     return email.message_from_string(userdata)
 
 
@@ -188,7 +190,7 @@ def bundle_userdata_files(fileobjs, tar_fname=None, compress=True,
 
 def unbundle_userdata(string, decompress=True):
     udata = {}
-    if string.startswith('#!'):
+    if utils.startswith(string, '#!'):
         tf = get_tar_from_userdata(string)
         files = tf.getmembers()
         for f in files:
@@ -202,7 +204,7 @@ def unbundle_userdata(string, decompress=True):
 
 
 def append_to_userdata(userdata_string, fileobjs, decompress=True):
-    if userdata_string.startswith('#!'):
+    if utils.startswith(userdata_string, '#!'):
         tf = get_tar_from_userdata(userdata_string, mode='a')
         return userdata_script_from_files(fileobjs, tar_file=tf)
     else:
@@ -212,7 +214,7 @@ def append_to_userdata(userdata_string, fileobjs, decompress=True):
 
 
 def remove_from_userdata(userdata_string, filenames, decompress=True):
-    if userdata_string.startswith('#!'):
+    if utils.startswith(userdata_string, '#!'):
         orig_tf = get_tar_from_userdata(userdata_string)
         tarstr = StringIO()
         new_tf = tarfile.TarFile(fileobj=tarstr, mode='w')

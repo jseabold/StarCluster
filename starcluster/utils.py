@@ -625,7 +625,7 @@ def gzip_compress(data):
         return gzip.compress(bytes(data, 'latin-1'))
 
 
-def gzip_uncompress(data):
+def gzip_decompress(data):
     if six.PY2:
         zfile = StringIO(data)
         gfile = gzip.GzipFile(fileobj=zfile, mode='r')
@@ -633,7 +633,7 @@ def gzip_uncompress(data):
         gfile.close()
         return data
     else:
-        return gzip.uncompress(data)
+        return gzip.decompress(data)
 
 
 def dump_compress_encode(obj, use_json=False, chunk_size=None):
@@ -674,6 +674,17 @@ def is_str_or_unicode(data):
         return isinstance(data, (str, unicode))
     if six.PY3:
         return isinstance(data, str)
+
+
+def startswith(data, str):
+    if six.PY2:
+        return data.startswith(str)
+    if six.PY3:
+        if isinstance(data, bytes):
+            return data.startswith(bytes(str, 'utf-8'))
+        elif isinstance(data, str):
+            return data.startswith(str)
+
 
 def string_to_file(string, filename):
     s = StringIO(string)
