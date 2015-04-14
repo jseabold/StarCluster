@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-
 """Text progressbar library for python.
 
 This library provides a text mode progressbar. This is typically used
@@ -66,7 +64,11 @@ except ImportError:
     pass
 import signal
 
+import six
 from six.moves import range
+
+from starcluster import utils
+
 
 class ProgressBarWidget(object):
     """This is an element of ProgressBar formatting.
@@ -175,7 +177,7 @@ class Bar(ProgressBarWidgetHFill):
         self.right = right
 
     def _format_marker(self, pbar):
-        if isinstance(self.marker, (str, unicode)):
+        if utils.is_str_or_unicode(self.marker):
             return self.marker
         else:
             return self.marker.update(pbar)
@@ -327,7 +329,7 @@ class ProgressBar(ProgressBarBase):
                 r.append(w)
                 hfill_inds.append(i)
                 num_hfill += 1
-            elif isinstance(w, (str, unicode)):
+            elif utils.is_str_or_unicode(w):
                 r.append(w)
                 currwidth += len(w)
             else:

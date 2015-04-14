@@ -51,6 +51,7 @@ except ImportError:
 
 from starcluster import exception
 from starcluster import progressbar
+from starcluster import utils
 from starcluster.logger import log
 
 
@@ -795,7 +796,7 @@ class SSHGlob(object):
     def glob1(self, dirname, pattern):
         if not dirname:
             dirname = posixpath.curdir
-        if isinstance(pattern, unicode) and not isinstance(dirname, unicode):
+        if utils.is_unicode(pattern) and not utils.is_unicode(dirname):
             # enc = sys.getfilesystemencoding() or sys.getdefaultencoding()
             # dirname = unicode(dirname, enc)
             dirname = unicode(dirname, 'UTF-8')

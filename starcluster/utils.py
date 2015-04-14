@@ -662,6 +662,19 @@ def decode_uncompress_load(string, use_json=False):
     return serializer.loads(zlib.decompress(string.decode('base64')))
 
 
+def is_unicode(data):
+    if six.PY2:
+        return isinstance(data, unicode)
+    if six.PY3:
+        return isinstance(data, str)
+
+
+def is_str_or_unicode(data):
+    if six.PY2:
+        return isinstance(data, (str, unicode))
+    if six.PY3:
+        return isinstance(data, str)
+
 def string_to_file(string, filename):
     s = StringIO(string)
     s.name = filename
