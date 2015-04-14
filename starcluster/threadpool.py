@@ -142,7 +142,7 @@ class ThreadPool(workerpool.WorkerPool):
         """
         if self._results_queue.qsize() > 0:
             self.get_results()
-        args = zip(*seq)
+        args = list(zip(*seq))
         jobid_fn = kwargs.get('jobid_fn')
         for seq in args:
             jobid = None
