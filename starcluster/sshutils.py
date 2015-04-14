@@ -817,10 +817,10 @@ def insert_char_every_n_chars(string, char='\n', every=64):
 def get_rsa_key(key_location=None, key_file_obj=None, passphrase=None,
                 use_pycrypto=False):
     data = key_file_obj or open(key_location)
-    if six.PY3:
-        data = data.read()
     try:
         if use_pycrypto:
+            if six.PY3:
+                data = data.read()
             key = RSA.importKey(data, passphrase=passphrase)
         else:
             key = paramiko.RSAKey.from_private_key(data,
