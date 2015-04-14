@@ -121,7 +121,7 @@ class ETA(ProgressBarWidget):
             return 'Time: %s' % self.format_time(pbar.seconds_elapsed)
         else:
             elapsed = pbar.seconds_elapsed
-            eta = elapsed * pbar.maxval / pbar.currval - elapsed
+            eta = elapsed * pbar.maxval // pbar.currval - elapsed
             return 'ETA:  %s' % self.format_time(eta)
 
 
@@ -135,7 +135,7 @@ class FileTransferSpeed(ProgressBarWidget):
         if pbar.seconds_elapsed < 2e-6:  # == 0:
             bps = 0.0
         else:
-            bps = float(pbar.currval) / pbar.seconds_elapsed
+            bps = float(pbar.currval) // pbar.seconds_elapsed
         spd = bps
         for u in self.units:
             if spd < 1000:
@@ -185,7 +185,7 @@ class Bar(ProgressBarWidgetHFill):
     def update(self, pbar, width):
         percent = pbar.percentage()
         cwidth = width - len(self.left) - len(self.right)
-        marked_width = int(percent * cwidth / 100)
+        marked_width = int(percent * cwidth // 100)
         m = self._format_marker(pbar)
         bar = (self.left + (m * marked_width).ljust(cwidth) + self.right)
         return bar
@@ -196,7 +196,7 @@ class ReverseBar(Bar):
     def update(self, pbar, width):
         percent = pbar.percentage()
         cwidth = width - len(self.left) - len(self.right)
-        marked_width = int(percent * cwidth / 100)
+        marked_width = int(percent * cwidth // 100)
         m = self._format_marker(pbar)
         bar = (self.left + (m * marked_width).rjust(cwidth) + self.right)
         return bar
@@ -220,7 +220,7 @@ class ProgressBarBase(object):
 
     def percentage(self):
         "Returns the percentage of the progress."
-        return self.currval * 100.0 / self.maxval
+        return self.currval * 100.0 // self.maxval
 
     def reset(self):
         if not self.finished and self.start_time:
@@ -338,7 +338,7 @@ class ProgressBar(ProgressBarBase):
                 r.append(weval)
         for iw in hfill_inds:
             r[iw] = r[iw].update(self,
-                                 (self.term_width - currwidth) / num_hfill)
+                                 (self.term_width - currwidth) // num_hfill)
         return r
 
     def _format_line(self):
