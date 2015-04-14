@@ -641,12 +641,16 @@ def dump_compress_encode(obj, use_json=False, chunk_size=None):
     if use_json:
         serializer = json
     if six.PY2:
-        p = base64.b64encode(zlib.compress(serializer.dumps(obj)))
+        compressed = zlib.compress(serializer.dumps(obj))
+        p = base64.b64encode(compressed)
     if six.PY3:
-        p = base64.b64encode(zlib.compress(
-            bytes(serializer.dumps(obj), 'latin-1'))).decode('latin-1')
+        data = serializer.dumps(obj)
+        if isinstance(data, str):
+            data = bytes(data, 'ascii')
+        compressed = zlib.compress(data)
+        p = base64.b64encode(compressed).decode('ascii')
     if chunk_size is not None:
-        return [p[i:i + chunk_size] for i in range(0, len(p), chunk_size)]
+        p = [p[i:i + chunk_size] for i in range(0, len(p), chunk_size)]
     return p
 
 
