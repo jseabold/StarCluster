@@ -1279,7 +1279,7 @@ class EasyEC2(EasyAWS):
             if not instance_store:
                 drives = ['/dev/xvd%s%%s' % s for s in string.ascii_lowercase]
                 for i in range(num_ephemeral_drives):
-                    j, k = i % 26, i / 26
+                    j, k = i % 26, i // 26
                     device_fmt = drives[k]
                     eph = boto.ec2.blockdevicemapping.BlockDeviceType()
                     eph.ephemeral_name = 'ephemeral%d' % i
