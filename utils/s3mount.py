@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from builtins import input
 import os
 import sys
 
@@ -16,18 +17,18 @@ ec2 = cfg.get_easy_ec2()
 buckets = ec2.s3.get_buckets()
 counter = 0
 for bucket in buckets:
-    print "[%d] %s" % (counter,bucket.name)
+    print("[%d] %s" % (counter,bucket.name))
     counter += 1
 
 try:
-    inp = int(raw_input('>>> Enter the bucket to mnt: '))
+    inp = int(input('>>> Enter the bucket to mnt: '))
     selection = buckets[inp].name
-    print 'you selected: %s' % selection
-    mountpt = raw_input('>>> please enter the mnt point: ')
-    print 'mounting %s at: %s' % (selection,mountpt)
+    print('you selected: %s' % selection)
+    mountpt = input('>>> please enter the mnt point: ')
+    print('mounting %s at: %s' % (selection,mountpt))
 except KeyboardInterrupt,e:
-    print
-    print 'Exiting...'
+    print()
+    print('Exiting...')
     sys.exit(1)
 
 try:
@@ -35,8 +36,8 @@ try:
                                                                       cfg.aws.get('aws_access_key_id'),
                                                                       cfg.aws.get('aws_secret_access_key'),mountpt))
 except KeyboardInterrupt,e:
-    print
-    print 'Attempting to umount %s' % mountpt
+    print()
+    print('Attempting to umount %s' % mountpt)
     os.system('sudo umount %s' % mountpt)
-    print 'Exiting...'
+    print('Exiting...')
     sys.exit(1)

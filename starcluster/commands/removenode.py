@@ -14,10 +14,11 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+from builtins import input
 import warnings
 
-from starcluster.logger import log
 from starcluster.commands.completers import ClusterCompleter
+from starcluster.logger import log
 
 
 class CmdRemoveNode(ClusterCompleter):
@@ -116,7 +117,7 @@ class CmdRemoveNode(ClusterCompleter):
             self.parser.error("cannot have duplicate aliases (duplicate: %s)" %
                               dupe)
         if not self.opts.confirm:
-            resp = raw_input("Remove %s from %s (y/n)? " %
+            resp = input("Remove %s from %s (y/n)? " %
                              (', '.join(aliases) or '%s nodes' % num_nodes,
                               tag))
             if resp not in ['y', 'Y', 'yes']:

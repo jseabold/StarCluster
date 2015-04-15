@@ -228,17 +228,19 @@ class Node(object):
     @property
     def num_processors(self):
         if not self._num_procs:
-            self._num_procs = int(
-                self.ssh.execute(
-                    'cat /proc/cpuinfo | grep processor | wc -l')[0])
+                results = list(self.ssh.execute(
+                    'cat /proc/cpuinfo | grep processor | wc -l'))
+                if len(results) > 0:
+                    self._num_procs = int(results[0])
         return self._num_procs
 
     @property
     def memory(self):
         if not self._memory:
-            self._memory = float(
-                self.ssh.execute(
-                    "free -m | grep -i mem | awk '{print $2}'")[0])
+            results = list(self.ssh.execute(
+                "free -m | grep -i mem | awk '{print $2}'"))
+            if len(results) > 0:
+                self._memory = float(results[0])
         return self._memory
 
     @property
@@ -537,6 +539,8 @@ class Node(object):
             auth_keys_contents = auth_keys.read()
             auth_keys.close()
         auth_keys = self.ssh.remote_file(authorized_keys, 'a')
+        if isinstance(auth_keys_contents, bytes):
+            auth_keys_contents = auth_keys_contents.decode('ascii')
         if auth_new_key:
             # add newly generated public key to user's authorized_keys
             if pubkey_contents not in auth_keys_contents:
@@ -563,6 +567,7 @@ class Node(object):
         nodes - the nodes to add to the user's known hosts file
         add_self - add this Node to known_hosts in addition to nodes
         """
+        nodes = list(nodes)
         user = self.getpwnam(username)
         known_hosts_file = posixpath.join(user.pw_dir, '.ssh', 'known_hosts')
         khosts = []
@@ -578,7 +583,7 @@ class Node(object):
             for name, ip in node_names.items():
                 name_ip = "%s,%s" % (name, ip)
                 khosts.append(' '.join([name_ip, server_pkey.get_name(),
-                                        base64.b64encode(str(server_pkey))]))
+                                        server_pkey.get_base64()]))
         khostsf = self.ssh.remote_file(known_hosts_file, 'a')
         khostsf.write('\n'.join(khosts) + '\n')
         khostsf.chown(user.pw_uid, user.pw_gid)
@@ -777,8 +782,12 @@ class Node(object):
         """
         dev_regex = '/dev/[A-Za-z0-9/]+'
         r = re.compile('Disk (%s):' % dev_regex)
-        fdiskout = '\n'.join(self.ssh.execute("fdisk -l 2>/dev/null"))
-        proc_parts = '\n'.join(self.ssh.execute("cat /proc/partitions"))
+        fdiskout = utils.join(self.ssh.execute("fdisk -l 2>/dev/null"), '\n')
+        if isinstance(fdiskout, bytes):
+            fdiskout = fdiskout.decode('utf-8')
+        proc_parts = utils.join(self.ssh.execute("cat /proc/partitions"), '\n')
+        if isinstance(proc_parts, bytes):
+            fdiskout = proc_parts.decode('utf-8')
         devmap = {}
         for dev in r.findall(fdiskout):
             short_name = dev.replace('/dev/', '')
@@ -791,8 +800,8 @@ class Node(object):
         Returns a dictionary mapping partitions->(start, end, blocks, id) based
         on 'fdisk -l'
         """
-        fdiskout = '\n'.join(self.ssh.execute("fdisk -l %s 2>/dev/null" %
-                                              (device or '')))
+        fdiskout = utils.join(self.ssh.execute("fdisk -l %s 2>/dev/null" %
+                                              (device or '')), '\n')
         part_regex = '/dev/[A-Za-z0-9/]+'
         r = re.compile('(%s)\s+\*?\s+'
                        '(\d+)(?:[-+])?\s+'

@@ -521,7 +521,7 @@ class SSHClient(object):
             output = []
             line = None
             while line != '':
-                line = stdout.readline()
+                line = utils.to_str(stdout.readline())
                 if only_printable:
                     line = ''.join(c for c in line if c in string.printable)
                 if line != '':
@@ -531,8 +531,9 @@ class SSHClient(object):
                 output.append(line)
                 print(line, end="")
         if only_printable:
-            output = map(lambda line: ''.join(c for c in line if c in
-                                              string.printable), output)
+            output = map(lambda line: ''.join(c for c in utils.to_str(line)
+                                              if c in string.printable),
+                         output)
         output = map(lambda line: line.strip(), output)
         return output
 
@@ -574,7 +575,7 @@ class SSHClient(object):
                                   only_printable=only_printable)
         exit_status = channel.recv_exit_status()
         self.__last_status = exit_status
-        out_str = '\n'.join(output)
+        out_str = utils.join(output, '\n')
         if exit_status != 0:
             msg = "remote command '%s' failed with status %d"
             msg %= (command, exit_status)

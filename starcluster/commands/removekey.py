@@ -14,10 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
-
-from starcluster.logger import log
+from builtins import input
 
 from starcluster.commands.base import CmdBase
+from starcluster.logger import log
 
 
 class CmdRemoveKey(CmdBase):
@@ -40,7 +40,7 @@ class CmdRemoveKey(CmdBase):
         name = args[0]
         kp = self.ec2.get_keypair(name)
         if not self.opts.confirm:
-            resp = raw_input("**PERMANENTLY** delete keypair %s (y/n)? " %
+            resp = input("**PERMANENTLY** delete keypair %s (y/n)? " %
                              name)
             if resp not in ['y', 'Y', 'yes']:
                 log.info("Aborting...")

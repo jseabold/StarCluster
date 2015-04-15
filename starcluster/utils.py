@@ -613,6 +613,16 @@ class struct_passwd(tuple):
             raise AttributeError
 
 
+def join(data, with_str):
+    if six.PY3:
+        str_data = []
+        for x in data:
+            if isinstance(x, bytes):
+                x = x.decode('utf-8')
+            str_data.append(x)
+    return with_str.join(data)
+
+
 def gzip_compress(data):
     if six.PY2:
         s = StringIO()
@@ -655,11 +665,23 @@ def dump_compress_encode(obj, use_json=False, chunk_size=None):
 
 
 def decode_uncompress_load(string, use_json=False):
-    string = ''.join(string)
+    string = join(string, '')
     serializer = cPickle
     if use_json:
         serializer = json
-    return serializer.loads(zlib.decompress(string.decode('base64')))
+    data = zlib.decompress(base64.b64decode(string))
+    if isinstance(data, bytes):
+        try:
+            data = data.decode('utf-8')
+        except UnicodeDecodeError:
+            try:
+                cPickle.loads(data)
+                # is was a pickle; everything's going to be okay
+            except Exception as err:
+                print(err)
+                print("Raw string: %s" % string)
+                print("Data: %s" % data)
+    return serializer.loads(data)
 
 
 def is_unicode(data):
@@ -684,6 +706,19 @@ def startswith(data, str):
             return data.startswith(bytes(str, 'utf-8'))
         elif isinstance(data, str):
             return data.startswith(str)
+
+
+def to_str(data):
+    # you don't want to use str() on bytes; you'll get nonsense in Python 3
+    if isinstance(data, bytes):
+        return data.decode('utf-8')
+    if six.PY2:
+        data = str(data)
+    elif six.PY3 and hasattr(data, '__str__'):
+        data = data.__str__()
+    if isinstance(data, bytes):
+        data = data.decode('utf-8')
+    return data
 
 
 def string_to_file(string, filename):

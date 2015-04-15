@@ -19,10 +19,11 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from starcluster.logger import log
-from starcluster import exception
+from builtins import input
 
+from starcluster import exception
 from starcluster.commands.completers import ClusterCompleter
+from starcluster.logger import log
 
 
 class CmdStop(ClusterCompleter):
@@ -119,7 +120,7 @@ class CmdStop(ClusterCompleter):
                         "'terminate' command instead to destroy the cluster."
                         "\n\nPass --help for more info" % cluster_name)
             if not self.opts.confirm:
-                resp = raw_input("Stop cluster %s (y/n)? " % cluster_name)
+                resp = input("Stop cluster %s (y/n)? " % cluster_name)
                 if resp not in ['y', 'Y', 'yes']:
                     log.info("Aborting...")
                     continue

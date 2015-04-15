@@ -51,7 +51,10 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
 
     def _setup_sge_profile(self, node):
         sge_profile = node.ssh.remote_file(self.SGE_PROFILE, "w")
-        arch = node.ssh.execute(self._sge_path("util/arch"))[0]
+        arch = ""
+        result = list(node.ssh.execute(self._sge_path("util/arch")))
+        if len(result) > 0:
+            arch = result[0]
         sge_profile.write(sge.sgeprofile_template % dict(arch=arch))
         sge_profile.close()
 

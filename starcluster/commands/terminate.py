@@ -19,10 +19,11 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from starcluster import exception
-from starcluster.logger import log
+from builtins import input
 
+from starcluster import exception
 from starcluster.commands.completers import ClusterCompleter
+from starcluster.logger import log
 
 
 class CmdTerminate(ClusterCompleter):
@@ -60,7 +61,7 @@ class CmdTerminate(ClusterCompleter):
             action = 'Terminate'
             if cl.is_ebs_cluster():
                 action = 'Terminate EBS'
-            resp = raw_input(
+            resp = input(
                 "%s cluster %s (y/n)? " % (action, cl.cluster_tag))
             if resp not in ['y', 'Y', 'yes']:
                 log.info("Aborting...")
@@ -69,7 +70,7 @@ class CmdTerminate(ClusterCompleter):
 
     def _terminate_manually(self, cl):
         if not self.opts.confirm:
-            resp = raw_input("Terminate cluster %s (y/n)? " % cl.cluster_tag)
+            resp = input("Terminate cluster %s (y/n)? " % cl.cluster_tag)
             if resp not in ['y', 'Y', 'yes']:
                 log.info("Aborting...")
                 return

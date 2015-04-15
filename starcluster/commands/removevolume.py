@@ -14,10 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
-
-from starcluster.logger import log
+from builtins import input
 
 from starcluster.commands.completers import VolumeCompleter
+from starcluster.logger import log
 
 
 class CmdRemoveVolume(VolumeCompleter):
@@ -55,7 +55,7 @@ class CmdRemoveVolume(VolumeCompleter):
                           "please wait a few moments and try again...")
                 return
             if not self.opts.confirm:
-                resp = raw_input("**PERMANENTLY** delete %s (y/n)? " % volid)
+                resp = input("**PERMANENTLY** delete %s (y/n)? " % volid)
                 if resp not in ['y', 'Y', 'yes']:
                     log.info("Aborting...")
                     return

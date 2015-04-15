@@ -14,10 +14,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
-
-from starcluster.logger import log
+from builtins import input
 
 from starcluster.commands.completers import ImageCompleter
+from starcluster.logger import log
 
 
 class CmdRemoveImage(ImageCompleter):
@@ -75,7 +75,7 @@ class CmdRemoveImage(ImageCompleter):
             keep_image_data = self.opts.keep_image_data
             if not confirmed:
                 if not pretend:
-                    resp = raw_input("**PERMANENTLY** delete %s (y/n)? " %
+                    resp = input("**PERMANENTLY** delete %s (y/n)? " %
                                      imageid)
                     if resp not in ['y', 'Y', 'yes']:
                         log.info("Aborting...")
