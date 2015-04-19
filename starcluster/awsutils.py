@@ -840,7 +840,7 @@ class EasyEC2(EasyAWS):
         keypair = instance.key_name or 'N/A'
         uptime = utils.get_elapsed_time(instance.launch_time) or 'N/A'
         tags = ', '.join(['%s=%s' % (k, v) for k, v in
-                          instance.tags.iteritems()]) or 'N/A'
+                          utils.iteritems(instance.tags)]) or 'N/A'
         vpc_id = instance.vpc_id or 'N/A'
         subnet_id = instance.subnet_id or 'N/A'
         if state == 'stopped':
