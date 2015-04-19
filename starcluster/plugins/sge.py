@@ -79,10 +79,11 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         if not nodes:
             nodes = self._nodes if self.master_is_exec_host else self.nodes
         if self.slots_per_host is None:
-            pe_slots = sum(self.pool.map(lambda n: n.num_processors, nodes,
-                                         jobid_fn=lambda n: n.alias))
+            pe_slots = sum([x for x in
+                           self.pool.map(lambda n: n.num_processors, nodes,
+                           jobid_fn=lambda n: n.alias) if x])
         else:
-            pe_slots = self.slots_per_host * len(nodes)
+            pe_slots = self.slots_per_host * len(list(nodes))
         if not pe_exists:
             penv = mssh.remote_file("/tmp/pe.txt", "w")
             penv.write(sge.sge_pe_template % (name, pe_slots))
@@ -107,7 +108,7 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         if exec_host:
             num_slots = self.slots_per_host
             if num_slots is None:
-                num_slots = node.num_processors
+                num_slots = node.num_processors or 1
             node.ssh.execute("qconf -aattr hostgroup hostlist %s @allhosts" %
                              node.alias)
             node.ssh.execute('qconf -aattr queue slots "[%s=%d]" all.q' %
@@ -162,7 +163,7 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         master.ssh.execute('qconf -mattr queue shell "/bin/bash" all.q')
         for node in self.nodes:
             self.pool.simple_job(self._add_to_sge, (node,), jobid=node.alias)
-        self.pool.wait(numtasks=len(self.nodes))
+        self.pool.wait(numtasks=len(list(self.nodes)))
         self._create_sge_pe()
 
     def _remove_from_sge(self, node):
