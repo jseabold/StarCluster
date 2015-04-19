@@ -687,7 +687,7 @@ class Node(object):
             for path in export_paths:
                 export_line = ' '.join(
                     [path, node.alias + nfs_export_settings + '\n'])
-                if export_line not in contents:
+                if export_line not in utils.to_str(contents):
                     etc_exports.write(export_line)
         etc_exports.close()
         self.ssh.execute('exportfs -fra')
@@ -711,7 +711,7 @@ class Node(object):
 
     def start_nfs_server(self):
         log.info("Starting NFS server on %s" % self.alias)
-        self.ssh.execute('/etc/init.d/portmap start', ignore_exit_status=True)
+        self.ssh.execute('/etc/init.d/rpcbind start', ignore_exit_status=True)
         self.ssh.execute('mount -t rpc_pipefs sunrpc /var/lib/nfs/rpc_pipefs/',
                          ignore_exit_status=True)
         EXPORTSD = '/etc/exports.d'
@@ -737,7 +737,7 @@ class Node(object):
         server_node - remote server node that is sharing the remote_paths
         remote_paths - list of remote paths to mount from server_node
         """
-        self.ssh.execute('/etc/init.d/portmap start')
+        self.ssh.execute('/etc/init.d/rpcbind start')
         # TODO: move this fix for xterm somewhere else
         self.ssh.execute('mount -t devpts none /dev/pts',
                          ignore_exit_status=True)
