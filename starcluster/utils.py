@@ -721,6 +721,13 @@ def to_str(data):
     return data
 
 
+def iteritems(data):
+    if six.PY2:
+        return data.iteritems()
+    elif six.PY3:
+        return data.items()
+
+
 def string_to_file(string, filename):
     s = StringIO(string)
     s.name = filename
