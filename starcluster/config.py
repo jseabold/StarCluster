@@ -293,7 +293,7 @@ class StarClusterConfig(object):
                     value = callback(value)
                 section_conf[setting] = value
         if filter_settings:
-            for key in store.keys():
+            for key in list(store.keys()):
                 if key not in settings and key != '__name__':
                     store.pop(key)
 
