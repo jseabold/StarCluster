@@ -23,6 +23,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import time
+
 import posixpath
 
 from starcluster import utils
@@ -348,15 +350,18 @@ class DefaultClusterSetup(ClusterSetup):
         Setup /etc/fstab and mount each nfs share listed in export_paths on
         each node in nodes list
         """
-        nodes = list(nodes)
+        if not nodes:
+            nodes = [x for x in self.nodes]
+        node_count = len(nodes)
         log.info("Mounting all NFS export path(s) on %d worker node(s)" %
-                 len(nodes))
+                 node_count)
         export_paths = export_paths or self._get_nfs_export_paths()
         for node in nodes:
+            log.info("Mounting NFS export path(s) on %s ..." % node._alias)
             self.pool.simple_job(node.mount_nfs_shares,
                                  (self._master, export_paths),
                                  jobid=node.alias)
-        self.pool.wait(numtasks=len(nodes))
+        self.pool.wait(numtasks=node_count)
 
     @print_timing("Setting up NFS")
     def _setup_nfs(self, nodes=None, start_server=True, export_paths=None):
@@ -365,13 +370,14 @@ class DefaultClusterSetup(ClusterSetup):
         """
         master = self._master
         # setup /etc/exports and start nfsd on master node
-        nodes = nodes or self.nodes
+        nodes = [x for x in nodes or self.nodes]
         export_paths = export_paths or self._get_nfs_export_paths()
         if start_server:
             master.start_nfs_server()
-        if nodes:
+        if len(nodes) > 0:
             master.export_fs_to_nodes(nodes, export_paths)
             self._mount_nfs_shares(nodes, export_paths=export_paths)
+
 
     def run(self, nodes, master, user, user_shell, volumes):
         """Start cluster configuration"""
