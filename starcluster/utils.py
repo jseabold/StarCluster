@@ -42,6 +42,8 @@ import six
 from six.moves import cStringIO as StringIO
 from six.moves import cPickle
 
+from distutils.version import LooseVersion
+
 try:
     from urlparse import urlparse
 except ImportError:
@@ -437,49 +439,12 @@ def v2fhelper(v, suff, version, weight):
     return parts[0]
 
 
-def version_to_float(v):
-    # This code was written by Krzysztof Kowalczyk (http://blog.kowalczyk.info)
-    # and is placed in public domain.
-    """
-    Convert a Mozilla-style version string into a floating-point number
-    1.2.3.4, 1.2a5, 2.3.4b1pre, 3.0rc2, etc.
-    """
-    version = [
-        0, 0, 0, 0,  # 4-part numerical revision
-        4,  # Alpha, beta, RC or (default) final
-        0,  # Alpha, beta, or RC version revision
-        1   # Pre or (default) final
-    ]
-    parts = v.split("pre")
-    if 2 == len(parts):
-        version[6] = 0
-        v = parts[0]
-
-    v = v2fhelper(v, "a",  version, 1)
-    v = v2fhelper(v, "b",  version, 2)
-    v = v2fhelper(v, "rc", version, 3)
-
-    parts = v.split(".")[:4]
-    for (p, i) in zip(parts, range(len(parts))):
-        version[i] = p
-    ver = float(version[0])
-    ver += float(version[1]) / 100.
-    ver += float(version[2]) / 10000.
-    ver += float(version[3]) / 1000000.
-    ver += float(version[4]) / 100000000.
-    ver += float(version[5]) / 10000000000.
-    ver += float(version[6]) / 1000000000000.
-    return ver
-
-
 def program_version_greater(ver1, ver2):
     """
     Return True if ver1 > ver2 using semantics of comparing version
     numbers
     """
-    v1f = version_to_float(ver1)
-    v2f = version_to_float(ver2)
-    return v1f > v2f
+    return LooseVersion(ver1) > LooseVersion(ver2)
 
 
 def test_version_to_float():
