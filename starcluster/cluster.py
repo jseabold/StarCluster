@@ -614,8 +614,9 @@ class Cluster(object):
             raise
         except exception.MasterDoesNotExist:
             raise
-        except Exception:
+        except Exception as err:
             log.debug('load receipt exception: ', exc_info=True)
+            log.debug('Error: {}'.format(err))
             raise exception.IncompatibleCluster(self.cluster_group)
         return True
 

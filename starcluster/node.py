@@ -122,13 +122,14 @@ class Node(object):
             try:
                 raw = self._get_user_data()
                 self._user_data = userdata.unbundle_userdata(raw)
-            except IOError as e:
+            except IOError as err:
                 parent_cluster = self.parent_cluster
+                log.debug("Error: {}".format(err))
                 if self.parent_cluster:
                     raise exception.IncompatibleCluster(parent_cluster)
                 else:
                     raise exception.BaseException(
-                        "Error occurred unbundling userdata: %s" % e)
+                        "Error occurred unbundling userdata: %s" % err)
         return self._user_data
 
     @property
