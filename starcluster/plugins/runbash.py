@@ -27,7 +27,7 @@ from starcluster.utils import print_timing
 class BashRunner(DefaultClusterSetup):
     """Bash Runner"""
 
-    def __init__(self, bash_file=None, master_only=False):
+    def __init__(self, bash_file=None, master_only=False, nodes_only=False):
         super(BashRunner, self).__init__()
         self.bash_file = bash_file
 
@@ -35,6 +35,14 @@ class BashRunner(DefaultClusterSetup):
             self.master_only = master_only.lower().strip() == 'true'
         else:
             self.master_only = master_only
+
+        if isinstance(nodes_only, basestring):
+            nodes_only = nodes_only.lower().strip()
+            self.nodes_only = nodes_only == 'true'
+        else:
+            self.nodes_only = nodes_only
+
+        assert not (self.master_only and self.nodes_only)
 
     @print_timing("BashRunner")
     def run_bash(self, nodes):
@@ -58,7 +66,7 @@ class BashRunner(DefaultClusterSetup):
         self.pool.wait(len(nodes))
 
     def run(self, nodes, master, user, user_shell, volumes):
-        if self.master_only:
+        if self.master_only and not self.nodes_only:
             self.run_bash([master])
         else:
             self.run_bash(nodes)
