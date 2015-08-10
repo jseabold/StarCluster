@@ -21,7 +21,7 @@ import os
 
 from starcluster.clustersetup import DefaultClusterSetup
 from starcluster.logger import log
-from starcluster.utils import print_timing
+from starcluster.utils import print_timing, string_types
 
 
 class BashRunner(DefaultClusterSetup):
@@ -31,12 +31,12 @@ class BashRunner(DefaultClusterSetup):
         super(BashRunner, self).__init__()
         self.bash_file = bash_file
 
-        if isinstance(master_only, basestring):
+        if isinstance(master_only, string_types):
             self.master_only = master_only.lower().strip() == 'true'
         else:
             self.master_only = master_only
 
-        if isinstance(nodes_only, basestring):
+        if isinstance(nodes_only, string_types):
             nodes_only = nodes_only.lower().strip()
             self.nodes_only = nodes_only == 'true'
         else:
