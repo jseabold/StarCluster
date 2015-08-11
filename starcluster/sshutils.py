@@ -531,10 +531,11 @@ class SSHClient(object):
                 output.append(line)
                 print(line, end="")
         if only_printable:
-            output = map(lambda line: ''.join(c for c in utils.to_str(line)
-                                              if c in string.printable),
-                         output)
-        output = map(lambda line: line.strip(), output)
+            output = list(map(lambda line: ''.join(c for c in
+                                                   utils.to_str(line)
+                                                   if c in string.printable),
+                              output))
+        output = list(map(lambda line: line.strip(), output))
         return output
 
     def execute(self, command, silent=True, only_printable=False,
