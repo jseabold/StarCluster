@@ -739,6 +739,7 @@ class Node(object):
         server_node - remote server node that is sharing the remote_paths
         remote_paths - list of remote paths to mount from server_node
         """
+        self.ssh.execute('apt-get install nfs-common -y')
         self.ssh.execute('service rpcbind start', ignore_exit_status=True)
         # TODO: move this fix for xterm somewhere else
         self.ssh.execute('mount -t devpts none /dev/pts',
