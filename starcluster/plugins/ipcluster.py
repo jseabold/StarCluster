@@ -210,7 +210,7 @@ class IPCluster(DefaultClusterSetup):
                                                   master.region.name))
         master.ssh.get(json_filename, local_json)
         # Configure security group for remote access
-        connection_params = json.load(open(local_json, 'rb'))
+        connection_params = json.load(open(local_json, 'r'))
         # For IPython version 0.14+ the list of channel ports is explicitly
         # provided in the connector file
         channel_authorized = False
