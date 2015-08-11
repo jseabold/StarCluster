@@ -288,10 +288,10 @@ class IPCluster(DefaultClusterSetup):
 
     @print_timing("IPCluster")
     def run(self, nodes, master, user, user_shell, volumes):
+        master.ssh.switch_user(user)
         self._check_ipython_installed(master)
         user_home = master.getpwnam(user).pw_dir
         profile_dir = posixpath.join(user_home, '.ipython', 'profile_default')
-        master.ssh.switch_user(user)
         self._write_config(master, user, profile_dir)
         # Start the cluster and some engines on the master (leave 1
         # processor free to handle cluster house keeping)
