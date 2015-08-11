@@ -492,6 +492,7 @@ class StarClusterConfig(object):
                             filter_settings)
         self._load_defaults(section_settings, store)
         self._check_required(section_name, section_settings, store)
+        store['__name__'] = section_name
         return store
 
     def _get_section_name(self, section):
