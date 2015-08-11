@@ -210,14 +210,15 @@ class Node(object):
     @property
     def groups(self):
         if not self._groups:
-            groups = map(lambda x: x.name, self.instance.groups)
+            groups = list(map(lambda x: x.name, self.instance.groups))
             self._groups = self.ec2.get_all_security_groups(groupnames=groups)
         return self._groups
 
     @property
     def cluster_groups(self):
         sg_prefix = static.SECURITY_GROUP_PREFIX
-        return filter(lambda x: x.name.startswith(sg_prefix), self.groups)
+        return list(filter(lambda x: x.name.startswith(sg_prefix),
+                           self.groups))
 
     @property
     def parent_cluster(self):
@@ -617,7 +618,7 @@ class Node(object):
         auth_key_file = posixpath.join(ssh_folder, 'authorized_keys')
         self.add_to_known_hosts(username, nodes)
         # exclude this node from copying
-        nodes = filter(lambda n: n.id != self.id, nodes)
+        nodes = list(filter(lambda n: n.id != self.id, nodes))
         # copy private key and public key to node
         self.copy_remote_file_to_nodes(priv_key_file, nodes)
         self.copy_remote_file_to_nodes(pub_key_file, nodes)
@@ -846,7 +847,7 @@ class Node(object):
         Remove all network names for node in nodes arg from this node's
         /etc/hosts file
         """
-        aliases = map(lambda x: x.alias, nodes)
+        aliases = list(map(lambda x: x.alias, nodes))
         self.ssh.remove_lines_from_file('/etc/hosts', '|'.join(aliases))
 
     def set_hostname(self, hostname=None):
