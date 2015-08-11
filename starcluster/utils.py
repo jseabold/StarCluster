@@ -585,6 +585,7 @@ def join(data, with_str):
             if isinstance(x, bytes):
                 x = x.decode('utf-8')
             str_data.append(x)
+        data = str_data
     return with_str.join(data)
 
 
