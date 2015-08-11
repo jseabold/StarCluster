@@ -24,6 +24,7 @@ import posixpath
 from starcluster import clustersetup
 from starcluster.templates import sge
 from starcluster.logger import log
+from starcluster import utils
 
 
 class SGEPlugin(clustersetup.DefaultClusterSetup):
@@ -57,7 +58,7 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         arch = ""
         result = list(node.ssh.execute(self._sge_path("util/arch")))
         if len(result) > 0:
-            arch = result[0]
+            arch = utils.to_str(result[0])
         sge_profile.write(sge.sgeprofile_template % dict(arch=arch))
         sge_profile.close()
 
