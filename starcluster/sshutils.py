@@ -630,7 +630,7 @@ class SSHClient(object):
         """Returns the remote machine's environment as a dictionary"""
         env = {}
         for line in self.execute('env'):
-            key, val = line.split('=', 1)
+            key, val = utils.to_str(line).split('=', 1)
             env[key] = val
         return env
 
