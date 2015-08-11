@@ -243,7 +243,7 @@ class IPCluster(DefaultClusterSetup):
         f = master.ssh.remote_file('%s/ipython_notebook_config.py' %
                                    profile_dir)
         notebook_port = 8888
-        sha1py = 'from IPython.lib import passwd; print passwd("%s")'
+        sha1py = 'from IPython.lib import passwd; print(passwd("%s"))'
         sha1cmd = "python -c '%s'" % sha1py
         sha1pass = master.ssh.execute(sha1cmd % self.notebook_passwd)[0]
         f.write('\n'.join([
