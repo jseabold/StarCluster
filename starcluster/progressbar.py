@@ -325,11 +325,15 @@ class ProgressBar(ProgressBarBase):
         num_hfill = 0
         currwidth = 0
         for i, w in enumerate(self.widgets):
+            # scp seems to make all strings into bytes on python 3.
+            if isinstance(w, bytes):
+                w = w.decode('utf-8')
+
             if isinstance(w, ProgressBarWidgetHFill):
                 r.append(w)
                 hfill_inds.append(i)
                 num_hfill += 1
-            elif utils.is_str_or_unicode(w):
+            elif utils.is_str_or_unicode(w) or isinstance(w, bytes):
                 r.append(w)
                 currwidth += len(w)
             else:
