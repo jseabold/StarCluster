@@ -1585,11 +1585,12 @@ class EasyEC2(EasyAWS):
 
     def show_console_output(self, instance_id):
         instance = self.get_instance(instance_id)
-        console_output = instance.get_console_output().output or ''
+        console_output = (utils.to_str(instance.get_console_output().output)
+                          or '')
         console_output = ''.join([c for c in console_output if c in
                                   string.printable])
         if console_output:
-            print(console_output)
+            print(utils.to_str(console_output))
         else:
             log.info("No console output available...")
 
@@ -1655,19 +1656,19 @@ class EasyS3(EasyAWS):
         except exception.BucketDoesNotExist:
             pass
 
-    def get_bucket(self, bucketname):
+    def get_bucket(self, bucketname, validate=False):
         """
         Returns bucket object representing S3 bucket
         """
         try:
-            return self.conn.get_bucket(bucketname)
+            return self.conn.get_bucket(bucketname, validate=validate)
         except boto.exception.S3ResponseError as e:
             if e.error_code == "NoSuchBucket":
                 raise exception.BucketDoesNotExist(bucketname)
             raise
 
-    def list_bucket(self, bucketname):
-        bucket = self.get_bucket(bucketname)
+    def list_bucket(self, bucketname, validate=False):
+        bucket = self.get_bucket(bucketname, validate=validate)
         for file in bucket.list():
             if file.name:
                 print(file.name)
